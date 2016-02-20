@@ -9,25 +9,29 @@ public class Node {
 
 	
 	
-	private ArrayList<Integer> values = null;
+	private ArrayList<Integer> values;
 	private int attribute;
-	private boolean isUsed = false;
-	private Node[] children = null;
+	private boolean isUsed;
+	private ArrayList<Node> children;
 	private ArrayList<HashMap<Integer, Instance>> data;
 	
-	public Node(){
+	public Node(int attribute){
+		
 		this.data = new ArrayList<HashMap<Integer, Instance>>();
-		this.setValues(new ArrayList<Integer>());
+		this.children = new ArrayList<Node>();
+		this.values = new ArrayList<Integer>();
+		this.attribute = attribute;
+		this.isUsed = false;
 		
 	}
 
 	
-	public Node[] getChildren() {
+	public ArrayList<Node> getChildren() {
 		return children;
 	}
 
-	public void setChildren(Node[] children) {
-		this.children = children;
+	public void setChildren(Node children) {
+		this.children.add(children);
 	}
 
 	
