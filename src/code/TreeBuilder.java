@@ -1,19 +1,14 @@
 package code;
 
-
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class TreeBuilder {
 	
-	private EntropyCalc ec;
-	private int NumAttributes = 4; 
+	private EntropyCalc ec; 
 	private ArrayList<Instance> remaining = null;
 	private ArrayList<Attribute> attributesRemaining = null;
 	private FileReader fr;
+	private boolean hasRootBeenSet = false;
 	
 	public TreeBuilder(){
 		fr = new FileReader();
@@ -31,26 +26,32 @@ public class TreeBuilder {
 		
 	}
 	
+	public void MasterID3(){
+		
+	}
+	
 	public void ID3(ArrayList<Instance> remaining,ArrayList<Attribute> attributesRemaining){
 		// Create a root node
 		Node root = new Node();
+		
 		
 		// Test if all examples are the same, if so return single node tree
 		boolean allSame = true; 
 		
 		Instance testInstance = remaining.get(0);
-		
-		for (int i = 0; i < remaining.size(); i++){
-			if (remaining.get(i).getClassification() != testInstance.getClassification()) allSame = false;
+		int k = 0;
+		while (k < remaining.size()){
+			if (remaining.get(k).getClassification() != testInstance.getClassification()) allSame = false;
+			k++;
 		}
 		
 		//Create the one leaf node tree.
 		if (allSame == true){
 			System.out.println("All Classifications are the same. The tree is a single node tree with the following label " + testInstance.getClassification());
 			for (int i = 0; i < remaining.size(); i ++){
-				root.addToLeaf(remaining.get(i));
+				root.setData(remaining.get(i).getClassification(), remaining.get(i));
 			}
-			return; 
+			return;
 		}
 		
 		
@@ -62,6 +63,7 @@ public class TreeBuilder {
 			int attribute = ec.calculateHighestGain(remaining, attributesRemaining);
 			System.out.println("Attribute with highest Gain = " + getAttribute(attribute));
 			//set root as highest gain 
+			
 			root.setAttribute(attribute);
 			root.setUsed(true);
 			
@@ -91,7 +93,7 @@ public class TreeBuilder {
 							//System.out.println("ID: " + root.getData().get(x).get(i) + ", Classification: " + root.getData().get(x).get(i).getClassification());
 						}
 						
-					
+						if (attributesRemaining.isEmpty()) printTree();
 					}else{
 						ArrayList<Attribute> tempAttributesRemaining = new ArrayList<Attribute>(attributesRemaining);
 						System.out.println(tempAttributesRemaining);
@@ -100,15 +102,22 @@ public class TreeBuilder {
 						
 						tempAttributesRemaining.remove(attribute);
 						System.out.println(tempAttributesRemaining);
+						if(!hasRootBeenSet){
+							
+						hasRootBeenSet = true;
 						
+						}
 						ID3(temp, tempAttributesRemaining);
 					}
 				
 			}
-			if (attributesRemaining.size() == 1 ){
-				break;
-			}	
-		}	
+			//if (attributesRemaining.size() == 0 ){
+			//	System.out.println("This is remaining: "+ attributesRemaining);
+			//	break;
+			//}	
+			
+		}
+		return;
 	}
 	
 	public boolean allSameClassification(ArrayList<Instance> remaining){
@@ -125,9 +134,7 @@ public class TreeBuilder {
 		return allSame;
 	}
 	
-	public void printTree(){
-		
-	}
+	
 	
 	public Attribute getAttribute(int i){
 		Attribute a = null;
@@ -138,6 +145,11 @@ public class TreeBuilder {
 		else if(i == 3) a = a.TEARPRODRATE;
 		
 		return a;
+	}
+	
+	//Method to Print the Tree
+	public void printTree(){
+		System.out.println("This is the end!");
 	}
 	
 }

@@ -22,7 +22,7 @@ public class AttributeGetter {
 
 		default:
 			System.out.println("Undefined Attribute");
-			return 0;
+			return 4;
 		}
 	}
 
