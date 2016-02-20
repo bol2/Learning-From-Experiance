@@ -15,12 +15,12 @@ public class Node {
 	private ArrayList<Node> children;
 	private ArrayList<HashMap<Integer, Instance>> data;
 	
-	public Node(int attribute){
+	public Node(){
 		
 		this.data = new ArrayList<HashMap<Integer, Instance>>();
 		this.children = new ArrayList<Node>();
 		this.values = new ArrayList<Integer>();
-		this.attribute = attribute;
+		this.attribute = 0;
 		this.isUsed = false;
 		
 	}
