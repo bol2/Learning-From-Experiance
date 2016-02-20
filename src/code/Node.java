@@ -1,5 +1,6 @@
 package code;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,17 +8,23 @@ import java.util.Map;
 public class Node {
 
 	private Node parent = null;
+	private ArrayList<Instance> leaf; 
 	private Node[] children = null;
 	private double gain = 0.0;
-	private ArrayList<HashMap<String, Instance>> data;
-	private boolean isUsed = false;
+	private ArrayList<HashMap<Integer, Instance>> data;
+	
 	private String name = null;
 	private int nameValue = 0;
-	private ArrayList<String> values = null;
+	
+	
+	private ArrayList<Integer> values = null;
+	private int attribute;
+	private boolean isUsed = false;
 	
 	public Node(){
-		this.data = new ArrayList<HashMap<String, Instance>>();
-		this.setValues(new ArrayList<String>());
+		leaf = new ArrayList<Instance>();
+		this.data = new ArrayList<HashMap<Integer, Instance>>();
+		this.setValues(new ArrayList<Integer>());
 		
 	}
 
@@ -45,12 +52,12 @@ public class Node {
 		this.gain = gain;
 	}
 
-	public ArrayList<HashMap<String, Instance>> getData() {
+	public ArrayList<HashMap<Integer, Instance>> getData() {
 		return data;
 	}
 
-	public void setData(String key, Instance value) {
-		HashMap<String, Instance> data1 = new HashMap<String, Instance>();
+	public void setData(Integer key, Instance value) {
+		HashMap<Integer, Instance> data1 = new HashMap<Integer, Instance>();
 		data1.put(key, value);
 		this.data.add(data1);
 	}
@@ -71,11 +78,11 @@ public class Node {
 		this.name = name;
 	}
 
-	public ArrayList<String> getValues() {
+	public ArrayList<Integer> getValues() {
 		return values;
 	}
 
-	public void setValues(ArrayList<String> values) {
+	public void setValues(ArrayList<Integer> values) {
 		this.values = values;
 	}
 
@@ -85,5 +92,17 @@ public class Node {
 
 	public void setNameValue(int nameValue) {
 		this.nameValue = nameValue;
+	}
+	
+	public void addToLeaf(Instance i){
+		leaf.add(i);
+	}
+
+	public int getAttribute() {
+		return attribute;
+	}
+
+	public void setAttribute(int attribute) {
+		this.attribute = attribute;
 	}
 }
