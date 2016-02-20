@@ -8,8 +8,6 @@ public class TreeBuilder {
 	private ArrayList<Instance> remaining = null;
 	private ArrayList<Attribute> attributesRemaining = null;
 	private FileReader fr;
-	private Node first;
-	private boolean firstIsSet = false;
 
 	public TreeBuilder() {
 		fr = new FileReader();
@@ -20,7 +18,6 @@ public class TreeBuilder {
 		attributesRemaining.add(Attribute.PERSCRIPTION);
 		attributesRemaining.add(Attribute.ASTIGMATIC);
 		attributesRemaining.add(Attribute.TEARPRODRATE);
-		first = new Node();
 
 		ec = new EntropyCalc();
 
@@ -140,7 +137,7 @@ public class TreeBuilder {
 
 				}
 
-			} first = root;
+			} //first = root;
 
 		//}
 
@@ -179,52 +176,52 @@ public class TreeBuilder {
 
 	// Method to Print the Tree
 	public void printTree(Node root) {
-		first = root;
 		
 		System.out.println("This is the end!");
 		System.out.println();
 		
-		System.out.println("this is the attribute of first " + first.getAttribute());
-		System.out.println("this is the value of first children amount " + first.getChildren().size());
-		System.out.println("These are the firsts values " + first.getValues());
-		System.out.println("first child " + first.getChildren().get(0).getData());
-		System.out.println("second child " + first.getChildren().get(1).getData());
+		System.out.println("this is the attribute of first " + root.getAttribute());
+		System.out.println("this is the value of first children amount " + root.getChildren().size());
+		System.out.println("These are the firsts values " + root.getValues());
+		System.out.println("first child " + root.getChildren().get(0).getData());
+		System.out.println("second child " + root.getChildren().get(1).getData());
 		System.out.println();
 		
-		Node second = first.getChildren().get(1);
+		Node second = root.getChildren().get(1);
 		System.out.println("this is the attribute of second " + second.getAttribute());
 		System.out.println("this is the value of second children amount " + second.getChildren().size());
 		System.out.println("Seconds child data " + second.getChildren().get(0).getData());
 		System.out.println("Seconds child data " + second.getChildren().get(1).getData());
 		System.out.println();
 
-		Node third = first.getChildren().get(1).getChildren().get(0);
+		Node third = root.getChildren().get(1).getChildren().get(0);
 		System.out.println("third child attribute " + third.getAttribute());
 		System.out.println("this is the value of third children amount " + third.getChildren().size());
-		System.out.println("thid child data " + third.getChildren().get(0).getData());
-		System.out.println("thid child data " + third.getChildren().get(1).getData());
-		System.out.println("thid child data " + third.getChildren().get(2).getData());
+		System.out.println("third child data " + third.getChildren().get(0).getData());
+		System.out.println("third child data " + third.getChildren().get(1).getData());
+		System.out.println("third child data " + third.getChildren().get(2).getData());
 		System.out.println();
 		
-		Node four = first.getChildren().get(1).getChildren().get(1);
-		System.out.println("third child attribute " + four.getAttribute());
+		Node four = root.getChildren().get(1).getChildren().get(1);
+		System.out.println("four child attribute " + four.getAttribute());
 		System.out.println("this is the value of third children amount " + four.getChildren().size());
-		System.out.println("thid child data " + four.getChildren().get(0).getData());
-		System.out.println("thid child data " + four.getChildren().get(1).getData());
+		System.out.println("four child data " + four.getChildren().get(0).getData());
+		System.out.println("four child data " + four.getChildren().get(1).getData());
 		System.out.println();
 		
-		Node fith = first.getChildren().get(1).getChildren().get(0).getChildren().get(2);
+		Node fith = root.getChildren().get(1).getChildren().get(0).getChildren().get(2);
 		System.out.println("fith child attribute " + fith.getAttribute());
 		System.out.println("this is the value of fith children amount " + fith.getChildren().size());
 		System.out.println("fith child data " + fith.getChildren().get(0).getData());
 		System.out.println("fith child data " + fith.getChildren().get(1).getData());
 		System.out.println();
 
-		Node six = first.getChildren().get(1).getChildren().get(1).getChildren().get(1);
-		System.out.println("fith child attribute " + six.getAttribute());
+		Node six = root.getChildren().get(1).getChildren().get(1).getChildren().get(1);
+		System.out.println("six child attribute " + six.getAttribute());
 		System.out.println("this is the value of fith children amount " + six.getChildren().size());
-		System.out.println("fith child data " + six.getChildren().get(0).getData());
-		System.out.println("fith child data " + six.getChildren().get(1).getData());
+		System.out.println("six child data " + six.getChildren().get(0).getData());
+		System.out.println("six child data " + six.getChildren().get(1).getData());
+		System.out.println("six child data " + six.getChildren().get(1).getData().get(0).values().stream().findFirst().get().getClassification());
 		System.out.println();
 		
 
