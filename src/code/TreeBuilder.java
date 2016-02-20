@@ -1,5 +1,7 @@
 package code;
 
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,26 +10,30 @@ import java.util.Map;
 public class TreeBuilder {
 	
 	private EntropyCalc ec;
-	private Node root;
 	private int NumAttributes = 4; 
 	private ArrayList<Instance> remaining = null;
 	private ArrayList<Attribute> attributesRemaining = null;
+	private FileReader fr;
 	
 	public TreeBuilder(){
-		this.ec = new EntropyCalc();
-		//this.remaining = ec.getInstances();
+		fr = new FileReader();
+		remaining = fr.getInput();
 		
-		root = getRoot();
-		// Need to build method for if all instances are same label then return a 1 node tree
-		System.out.println("This is the root node " + root.getName() + " These are the values "+ root.getValues());
-		buildTree(root.getNameValue());
-		printLeafs();
+		attributesRemaining = new ArrayList<Attribute>();
+		attributesRemaining.add(Attribute.AGE);
+		attributesRemaining.add(Attribute.PERSCRIPTION);
+		attributesRemaining.add(Attribute.ASTIGMATIC);
+		attributesRemaining.add(Attribute.TEARPRODRATE);
+		
+		ec = new EntropyCalc();
+		
+		ID3(remaining, attributesRemaining);
 		
 	}
 	
-	public void ID3(){
+	public void ID3(ArrayList<Instance> remaining,ArrayList<Attribute> attributesRemaining){
 		// Create a root node
-		Node r = new Node();
+		Node root = new Node();
 		
 		// Test if all examples are the same, if so return single node tree
 		boolean allSame = true; 
@@ -38,102 +44,100 @@ public class TreeBuilder {
 			if (remaining.get(i).getClassification() != testInstance.getClassification()) allSame = false;
 		}
 		
+		//Create the one leaf node tree.
 		if (allSame == true){
 			System.out.println("All Classifications are the same. The tree is a single node tree with the following label " + testInstance.getClassification());
+			for (int i = 0; i < remaining.size(); i ++){
+				root.addToLeaf(remaining.get(i));
+			}
 			return; 
 		}
 		
 		
-		while (NumAttributes != 0 ){
-			//int attribute = calculateHighestGain(remaining);
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	}
-	
-	public Node getRoot(){
-		ec.calcGainAge();
-		ec.calcGainAstigmatic();
-		ec.calcGainPerscription();
-		ec.calcGainTearProdRate();
-		
-		Node thisRoot = new Node();
-		String attributeName = null;
-		int attributeValue = 0;
-		
-		int attribute = ec.returnHighestGain();
-		if (attribute == 1) attributeName = "Age";
-		else if (attribute == 2) attributeName = "Specticle Perscription";
-		else if (attribute == 3) attributeName = "Astigmatic";
-		else if (attribute == 4){
-			attributeName = "Tear Production Rate";
-			attributeValue = 4;
-			thisRoot.getValues().add("Reduced");
-			thisRoot.getValues().add("Normal");
+		//
+		while (!attributesRemaining.isEmpty()){
+			if(root.isUsed()) break;
+			// calculate the entropy and the highest gain 
+			ec.calcEntropy(remaining);
+			int attribute = ec.calculateHighestGain(remaining, attributesRemaining);
+			System.out.println("Attribute with highest Gain = " + getAttribute(attribute));
+			//set root as highest gain 
+			root.setAttribute(attribute);
+			root.setUsed(true);
 			
+			AttributeGetter ag = new AttributeGetter(getAttribute(attribute));
+			//Add tree branch for each values 
+			root.setValues(ag.getAttributeValues());
 			
-		}
-		
-		thisRoot.setName(attributeName);
-		thisRoot.setNameValue(attributeValue);
-		
-		NumAttributes = NumAttributes - 1;
-		
-		return thisRoot;
-		
-	}
-	
-	public void buildTree(int attributeValue){
-			for (int i = 0; i < remaining.size(); i++){
-				if (root.getNameValue() == attributeValue){
-					Instance current = remaining.get(i);
-					if (current.getTearProdRate() == 1) root.setData("Reduced", current);
-					else if (current.getTearProdRate() == 2) root.setData("Normal", current);
-				}	
-			}
+			ArrayList<Integer> theAttributes = root.getValues();
+			int amountOfAttributes = root.getValues().size();
 			
-			
-			
-			while (NumAttributes != 0){
+			for (int i = 0; i < amountOfAttributes; i++){
+				ArrayList<Instance> temp = new ArrayList<Instance>();
+				for (int y = 0; y < remaining.size(); y ++){
+					if(remaining.get(y).getAttribute(attribute) == theAttributes.get(i)){
+						System.out.println("Adding to temp on condition" + remaining.get(y).getAttribute(attribute) + " " + theAttributes.get(i));
+						temp.add(remaining.get(y));
+					}
+				}
+					
+					if(allSameClassification(temp) == true){
+						// if all the same pull out 
+						System.out.println("Temp was empty so leaf node created containing the following data : ");
+						for (int x = 0; x < temp.size(); x ++){
+							root.setData(i, temp.get(x));
+							//System.out.println(temp.get(x));
+							//Instance tempInstance = root.getData().get(x).get(i);
+							//System.out.println("ID: " + root.getData().get(x).get(i) + ", Classification: " + root.getData().get(x).get(i).getClassification());
+						}
+						
+					
+					}else{
+						ArrayList<Attribute> tempAttributesRemaining = new ArrayList<Attribute>(attributesRemaining);
+						System.out.println(tempAttributesRemaining);
+						System.out.println("Tried to remove " + getAttribute(attribute));
+						
+						
+						tempAttributesRemaining.remove(attribute);
+						System.out.println(tempAttributesRemaining);
+						
+						ID3(temp, tempAttributesRemaining);
+					}
 				
 			}
+			if (attributesRemaining.size() == 1 ){
+				break;
+			}	
+		}	
 	}
 	
+	public boolean allSameClassification(ArrayList<Instance> remaining){
+		
+		// Test if all examples are the same, if so return single node tree
+				boolean allSame = true; 
+				
+				Instance testInstance = remaining.get(0);
+				
+				for (int i = 0; i < remaining.size(); i++){
+					if (remaining.get(i).getClassification() != testInstance.getClassification()) allSame = false;
+				}
+				
+		return allSame;
+	}
 	
-	public void printLeafs(){
-		System.out.println("Should be printing leafs");
-		System.out.println(root.getData().size());
-		for (int i =0; i < root.getData().size(); i ++){
-			Iterator<HashMap.Entry<String, Instance>> entries = root.getData().get(i).entrySet().iterator();
-			while (entries.hasNext()) {
-				  Map.Entry<String, Instance> entry = entries.next();
-				  String key = entry.getKey();
-				  int value = entry.getValue().getTearProdRate();
-				  if (key == "Reduced") System.out.println(entry + " entry number " + i + "This is the outcome of this leaf " + entry.getValue().getClassification());
-				  
-				}
-		}
-		
-		for (int i =0; i < root.getData().size(); i ++){
-			Iterator<HashMap.Entry<String, Instance>> entries = root.getData().get(i).entrySet().iterator();
-			while (entries.hasNext()) {
-				  Map.Entry<String, Instance> entry = entries.next();
-				  String key = entry.getKey();
-				  int value = entry.getValue().getTearProdRate();
-				  if (key == "Normal") System.out.println(entry + " entry number " + i + "This is the outcome of this leaf " + entry.getValue().getClassification());
-				  
-				}
-		}
-		
+	public void printTree(){
 		
 	}
-
+	
+	public Attribute getAttribute(int i){
+		Attribute a = null;
+		
+		if(i == 0) a = a.AGE;
+		else if(i == 1) a = a.PERSCRIPTION;
+		else if(i == 2) a = a.ASTIGMATIC;
+		else if(i == 3) a = a.TEARPRODRATE;
+		
+		return a;
+	}
+	
 }

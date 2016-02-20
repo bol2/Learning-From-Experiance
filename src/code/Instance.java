@@ -1,5 +1,6 @@
 package code;
 
+
 public class Instance {
 	
 	private int age;
@@ -7,17 +8,19 @@ public class Instance {
 	private int astigmatic;
 	private int tearProdRate;
 	private int classification; 
+	private int id;
 	
 	public Instance(){
 		
 	}
 	
-	public Instance(int age, int perscription, int astigmatic, int tearProdRate, int classification){
+	public Instance(int age, int perscription, int astigmatic, int tearProdRate, int classification, int id){
 		this.age = age;
 		this.perscription = perscription;
 		this.astigmatic = astigmatic;
 		this.tearProdRate = tearProdRate;
-		this.classification = classification; 
+		this.classification = classification;
+		this.id = id;
 	}
 
 	public int getClassification() {
@@ -60,6 +63,20 @@ public class Instance {
 		this.tearProdRate = tearProdRate;
 	}
 	
-	
+	public int getAttribute(int i){
+		if (i == 0) return this.getAge();
+		else if(i == 1) return this.getPerscription();
+		else if(i == 2) return this.getAstigmatic();
+		else if(i == 3) return this.getTearProdRate();
+		
+		return 0;
+	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 }

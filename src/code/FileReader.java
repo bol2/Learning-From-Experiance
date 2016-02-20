@@ -8,85 +8,48 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class FileReader {
 	
-	/*public static final String file = "src/LensData.txt";
+	public static final String file = "src/LensData.txt";
+	private ArrayList<Instance> input = null;
 	
-	public static ArrayList<Instance> createInstances() {
+	public FileReader(){
+		input = new ArrayList<Instance>();
+		readFile();	
+	}
+	
+	public void readFile(){
 		
-		BufferedReader reader = null;
-		DataInputStream dis = null;
-		
-		ArrayList<Instance> instances = new ArrayList<Instance>();
-		
-		try {
-			File f = new File(file);
-			FileInputStream fis = new FileInputStream(f);
-			reader = new BufferedReader(new InputStreamReader(fis));;
-			
-			String line;
-			Instance i = null;
-			ArrayList<Attribute> attributes;
-			while ((line = reader.readLine()) != null){
-				StringTokenizer st = new StringTokenizer(line, " ");
-				attributes = new ArrayList<Attribute>();
-				i = new Instance();
-				
-				// Add check to see if correct amount of attributes 
-				
-				String age = st.nextToken(); 
-				String perscription = st.nextToken();
-				String astigmatic = st.nextToken();
-				String tearProdRate = st.nextToken();
-				String outcome = st.nextToken();
-				
-				if (age.equalsIgnoreCase("1")){
-					attributes.add(new Attribute("Age", Attribute.young));
+		 try {
+			Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(new FileInputStream(file))));
+			while(scanner.hasNext()){
+				if(scanner.hasNextInt()){
+					int id_key = scanner.nextInt();
+				    int first_key = scanner.nextInt();
+				    int second_key = scanner.nextInt();
+				    int third_key = scanner.nextInt();
+				    int fourth_key = scanner.nextInt();
+				    int fith_key = scanner.nextInt();
+				    
+				    Instance i = new Instance(first_key, second_key, third_key, fourth_key, fith_key, id_key);
+				    input.add(i);
 				}
 			}
-		} catch (Exception e){
+			scanner.close();
 			
-		}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}   
 		
-		return instances;
+		
 		
 	}
 	
-	
-	
-	
-
-	public FileReader(){
-		
-	
-		
-		try {
-			//Files.readAllLines(new File("t").toPath()).parallelStream();
-			BufferedReader infile = new BufferedReader(new InputStreamReader 
-					(new FileInputStream(file)));
-			String values;
-			while((values = infile.readLine()) != null){
-				String[] broken_text = values.split(" ");
-			    String first_key = broken_text[0];
-			    String second_key = broken_text[2];
-			    String third_key = broken_text[4];
-			    String fourth_key = broken_text[6];
-			    String fith_key = broken_text[8];
-			    
-			    Instance i = new Instance(Integer.parseInt(first_key),Integer.parseInt(second_key),Integer.parseInt(third_key),Integer.parseInt(fourth_key), Integer.parseInt(fith_key));
-			    instances.add(i);
-			}		
-			infile.close();
-			
-				
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}*/
-	
-
+	public ArrayList<Instance> getInput(){
+		return input;
+	}
 }
