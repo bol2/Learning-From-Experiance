@@ -1,5 +1,13 @@
 package code;
 
+/**
+ * CS39440 Major Project: Learning From Experience
+ * Instance.java
+ * Purpose: Represents a single instance from the data set with named attributes
+ * 
+ * @author Ben Larking
+ * @version 1.4 22/02/16
+ */
 
 public class Instance {
 	
@@ -10,9 +18,7 @@ public class Instance {
 	private int classification; 
 	private int id;
 	
-	public Instance(){
-		
-	}
+	public Instance(){}
 	
 	public Instance(int age, int perscription, int astigmatic, int tearProdRate, int classification, int id){
 		this.age = age;
@@ -63,13 +69,13 @@ public class Instance {
 		this.tearProdRate = tearProdRate;
 	}
 	
-	public int getAttribute(int i){
+	public int getAttributeValue(int i){
 		if (i == 0) return this.getAge();
 		else if(i == 1) return this.getPerscription();
 		else if(i == 2) return this.getAstigmatic();
 		else if(i == 3) return this.getTearProdRate();
 		
-		return 0;
+		return 4;
 	}
 
 	public int getId() {

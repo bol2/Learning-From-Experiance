@@ -1,24 +1,29 @@
 package code;
-
 import java.util.ArrayList;
 
-public class EntropyCalc {
+/**
+ * CS39440 Major Project: Learning From Experience
+ * EntropyCalculator.java
+ * Purpose: Class calculates data set entropy and information gain for
+ * attributes given a data set.
+ * 
+ * @author Ben Larking
+ * @version 1.4 22/02/16
+ */
 
-	private ArrayList<Instance> remaining;
-	private ArrayList<Attribute> attributesRemaining;
+public class EntropyCalculator {
+
 	private AttributeGetter ag;
 
 	double entropy;
 
-	public EntropyCalc() {
-
-		this.remaining = new ArrayList<Instance>();
-		this.attributesRemaining = new ArrayList<Attribute>();
-
+	public EntropyCalculator() {
 	}
 
-	public void calcEntropy(ArrayList<Instance> instances) {
+	public double calculateEntropy(ArrayList<Instance> instances) {
+
 		entropy = 0;
+
 		int classification1 = 0;
 		int classification2 = 0;
 		int classification3 = 0;
@@ -42,41 +47,38 @@ public class EntropyCalc {
 		if (classification3 != 0)
 			entropy += -classification3 / dataSetSize * (Math.log(classification3 / dataSetSize) / Math.log(2));
 
-	}
-
-	public double getEntropy() {
 		return entropy;
 	}
 
 	public int calculateHighestGain(ArrayList<Instance> remaining, ArrayList<Attribute> attributesRemaining) {
+
 		int value = 0;
 
-		this.remaining = remaining;
-		this.attributesRemaining = attributesRemaining;
 		ArrayList<Double> doubles = new ArrayList<Double>();
 		ArrayList<Attribute> addedAttributes = new ArrayList<Attribute>();
 
-		for (Attribute a : attributesRemaining) {
-			ag = new AttributeGetter(a);
+		for (Attribute attribute : attributesRemaining) {
+			ag = new AttributeGetter(attribute);
 
 			if (ag.getAttribute() == 0) {
 				doubles.add(calculateAgeGain(remaining));
-				addedAttributes.add(a);
+				addedAttributes.add(attribute);
 			} else if (ag.getAttribute() == 1) {
 				doubles.add(calculatePerscriptionGain(remaining));
-				addedAttributes.add(a);
+				addedAttributes.add(attribute);
 			} else if (ag.getAttribute() == 2) {
 				doubles.add(calculateAstigmaticGain(remaining));
-				addedAttributes.add(a);
+				addedAttributes.add(attribute);
 			} else if (ag.getAttribute() == 3) {
 				doubles.add(calculateTearProdRateGain(remaining));
-				addedAttributes.add(a);
+				addedAttributes.add(attribute);
 			}
 		}
 
 		double max = Double.MIN_VALUE;
-		int position = -1;
 
+		int position = -1;
+		// Doesn't really work if two values are the same
 		for (int i = 0; i < doubles.size(); i++) {
 			if (doubles.get(i) > max) {
 				max = doubles.get(i);
@@ -84,8 +86,8 @@ public class EntropyCalc {
 			}
 		}
 
-		Attribute thisOne = addedAttributes.get(position);
-		ag = new AttributeGetter(thisOne);
+		Attribute highestGain = addedAttributes.get(position);
+		ag = new AttributeGetter(highestGain);
 		value = ag.getAttribute();
 		return value;
 	}
@@ -93,58 +95,64 @@ public class EntropyCalc {
 	private double calculateTearProdRateGain(ArrayList<Instance> remaining) {
 		double gain = 0;
 
-		int myopeandHardLense = 0;
-		int myopeandSoftLense = 0;
-		int myopeandNoLense = 0;
-		double myopeAppearances = 0;
+		int reducedandHardLense = 0;
+		int reducedandSoftLense = 0;
+		int reducedandNoLense = 0;
+		double reducedAppearances = 0;
 
-		int hyperandHardLense = 0;
-		int hyperandSoftLense = 0;
-		int hyperandNoLense = 0;
-		double hyperAppearances = 0;
+		int normalandHardLense = 0;
+		int normalandSoftLense = 0;
+		int normalandNoLense = 0;
+		double normalAppearances = 0;
 
 		for (int i = 0; i < remaining.size(); i++) {
 			int thisPerscription = remaining.get(i).getTearProdRate();
 			if (thisPerscription == 1) {
-				myopeAppearances++;
+				reducedAppearances++;
 				int classification = remaining.get(i).getClassification();
 				if (classification == 1)
-					myopeandHardLense++;
+					reducedandHardLense++;
 				if (classification == 2)
-					myopeandSoftLense++;
+					reducedandSoftLense++;
 				if (classification == 3)
-					myopeandNoLense++;
+					reducedandNoLense++;
 			} else if (thisPerscription == 2) {
-				hyperAppearances++;
+				normalAppearances++;
 				int classification = remaining.get(i).getClassification();
 				if (classification == 1)
-					hyperandHardLense++;
+					normalandHardLense++;
 				if (classification == 2)
-					hyperandSoftLense++;
+					normalandSoftLense++;
 				if (classification == 3)
-					hyperandNoLense++;
+					normalandNoLense++;
 			}
 		}
 
-		double myopeGain = 0;
+		double reducedGain = 0;
+		double normalGain = 0;
 
-		if (myopeandHardLense != 0)
-			myopeGain = -myopeandHardLense / myopeAppearances
-					* (Math.log(myopeandHardLense / myopeAppearances) / Math.log(2));
-		if (myopeGain != 0)
-			myopeGain += -myopeandSoftLense / myopeAppearances
-					* (Math.log(myopeandSoftLense / myopeAppearances) / Math.log(2));
-		if (myopeandNoLense != 0)
-			myopeGain += -myopeandNoLense / myopeAppearances
-					* (Math.log(myopeandNoLense / myopeAppearances) / Math.log(2));
-		double hyperGain = -hyperandHardLense / hyperAppearances
-				* (Math.log(hyperandHardLense / hyperAppearances) / Math.log(2));
-		hyperGain += -hyperandSoftLense / hyperAppearances
-				* (Math.log(hyperandSoftLense / hyperAppearances) / Math.log(2));
-		hyperGain += -hyperandNoLense / hyperAppearances * (Math.log(hyperandNoLense / hyperAppearances) / Math.log(2));
+		if (reducedandHardLense != 0)
+			reducedGain = -reducedandHardLense / reducedAppearances
+					* (Math.log(reducedandHardLense / reducedAppearances) / Math.log(2));
+		if (reducedandSoftLense != 0)
+			reducedGain += -reducedandSoftLense / reducedAppearances
+					* (Math.log(reducedandSoftLense / reducedAppearances) / Math.log(2));
+		if (reducedandNoLense != 0)
+			reducedGain += -reducedandNoLense / reducedAppearances
+					* (Math.log(reducedandNoLense / reducedAppearances) / Math.log(2));
 
-		gain = entropy
-				- (myopeAppearances / remaining.size() * myopeGain + hyperAppearances / remaining.size() * hyperGain);
+		if (normalandHardLense != 0)
+			normalGain = -normalandHardLense / normalAppearances
+					* (Math.log(normalandHardLense / normalAppearances) / Math.log(2));
+		if (normalandSoftLense != 0)
+			normalGain += -normalandSoftLense / normalAppearances
+					* (Math.log(normalandSoftLense / normalAppearances) / Math.log(2));
+		if (normalandNoLense != 0)
+			normalGain += -normalandNoLense / normalAppearances
+					* (Math.log(normalandNoLense / normalAppearances) / Math.log(2));
+
+		gain = entropy - (reducedAppearances / remaining.size() * reducedGain
+				+ normalAppearances / remaining.size() * normalGain);
 
 		return gain;
 	}
@@ -152,62 +160,57 @@ public class EntropyCalc {
 	private double calculateAstigmaticGain(ArrayList<Instance> remaining) {
 		double gain = 0;
 
-		int myopeandHardLense = 0;
-		int myopeandSoftLense = 0;
-		int myopeandNoLense = 0;
-		double myopeAppearances = 0;
+		int noandHardLense = 0;
+		int noandSoftLense = 0;
+		int noandNoLense = 0;
+		double noAppearances = 0;
 
-		int hyperandHardLense = 0;
-		int hyperandSoftLense = 0;
-		int hyperandNoLense = 0;
-		double hyperAppearances = 0;
+		int yesandHardLense = 0;
+		int yesandSoftLense = 0;
+		int yesandNoLense = 0;
+		double yesAppearances = 0;
 
 		for (int i = 0; i < remaining.size(); i++) {
 			int thisPerscription = remaining.get(i).getAstigmatic();
 			if (thisPerscription == 1) {
-				myopeAppearances++;
+				noAppearances++;
 				int classification = remaining.get(i).getClassification();
 				if (classification == 1)
-					myopeandHardLense++;
+					noandHardLense++;
 				if (classification == 2)
-					myopeandSoftLense++;
+					noandSoftLense++;
 				if (classification == 3)
-					myopeandNoLense++;
+					noandNoLense++;
 			} else if (thisPerscription == 2) {
-				hyperAppearances++;
+				yesAppearances++;
 				int classification = remaining.get(i).getClassification();
 				if (classification == 1)
-					hyperandHardLense++;
+					yesandHardLense++;
 				if (classification == 2)
-					hyperandSoftLense++;
+					yesandSoftLense++;
 				if (classification == 3)
-					hyperandNoLense++;
+					yesandNoLense++;
 			}
 		}
-		double myopeGain = 0;
 
-		if (myopeandHardLense != 0)
-			myopeGain = -myopeandHardLense / myopeAppearances
-					* (Math.log(myopeandHardLense / myopeAppearances) / Math.log(2));
-		if (myopeandSoftLense != 0)
-			myopeGain += -myopeandSoftLense / myopeAppearances
-					* (Math.log(myopeandSoftLense / myopeAppearances) / Math.log(2));
-		if (myopeandNoLense != 0)
-			myopeGain += -myopeandNoLense / myopeAppearances
-					* (Math.log(myopeandNoLense / myopeAppearances) / Math.log(2));
-		double hyperGain = 0;
-		if (hyperandHardLense != 0)
-			hyperGain = -hyperandHardLense / hyperAppearances
-					* (Math.log(hyperandHardLense / hyperAppearances) / Math.log(2));
-		if (hyperandSoftLense != 0)
-			hyperGain += -hyperandSoftLense / hyperAppearances
-					* (Math.log(hyperandSoftLense / hyperAppearances) / Math.log(2));
-		if (hyperandNoLense != 0)
-			hyperGain += -hyperandNoLense / hyperAppearances
-					* (Math.log(hyperandNoLense / hyperAppearances) / Math.log(2));
+		double noGain = 0;
+		double yesGain = 0;
 
-		gain = entropy
-				- (myopeAppearances / remaining.size() * myopeGain + hyperAppearances / remaining.size() * hyperGain);
+		if (noandHardLense != 0)
+			noGain = -noandHardLense / noAppearances * (Math.log(noandHardLense / noAppearances) / Math.log(2));
+		if (noandSoftLense != 0)
+			noGain += -noandSoftLense / noAppearances * (Math.log(noandSoftLense / noAppearances) / Math.log(2));
+		if (noandNoLense != 0)
+			noGain += -noandNoLense / noAppearances * (Math.log(noandNoLense / noAppearances) / Math.log(2));
+
+		if (yesandHardLense != 0)
+			yesGain = -yesandHardLense / yesAppearances * (Math.log(yesandHardLense / yesAppearances) / Math.log(2));
+		if (yesandSoftLense != 0)
+			yesGain += -yesandSoftLense / yesAppearances * (Math.log(yesandSoftLense / yesAppearances) / Math.log(2));
+		if (yesandNoLense != 0)
+			yesGain += -yesandNoLense / yesAppearances * (Math.log(yesandNoLense / yesAppearances) / Math.log(2));
+
+		gain = entropy - (noAppearances / remaining.size() * noGain + yesAppearances / remaining.size() * yesGain);
 
 		return gain;
 	}
@@ -249,17 +252,25 @@ public class EntropyCalc {
 		}
 		double myopeGain = 0;
 		double hyperGain = 0;
-		
-		if(myopeandHardLense != 0) myopeGain = -myopeandHardLense / myopeAppearances
-				* (Math.log(myopeandHardLense / myopeAppearances) / Math.log(2));
-		if(myopeandSoftLense != 0) myopeGain += -myopeandSoftLense / myopeAppearances
-				* (Math.log(myopeandSoftLense / myopeAppearances) / Math.log(2));
-		if(myopeandNoLense != 0) myopeGain += -myopeandNoLense / myopeAppearances * (Math.log(myopeandNoLense / myopeAppearances) / Math.log(2));
-		if(hyperandHardLense != 0) hyperGain = -hyperandHardLense / hyperAppearances
-				* (Math.log(hyperandHardLense / hyperAppearances) / Math.log(2));
-		if(hyperandSoftLense != 0)hyperGain += -hyperandSoftLense / hyperAppearances
-				* (Math.log(hyperandSoftLense / hyperAppearances) / Math.log(2));
-		if(hyperandNoLense != 0)hyperGain += -hyperandNoLense / hyperAppearances * (Math.log(hyperandNoLense / hyperAppearances) / Math.log(2));
+
+		if (myopeandHardLense != 0)
+			myopeGain = -myopeandHardLense / myopeAppearances
+					* (Math.log(myopeandHardLense / myopeAppearances) / Math.log(2));
+		if (myopeandSoftLense != 0)
+			myopeGain += -myopeandSoftLense / myopeAppearances
+					* (Math.log(myopeandSoftLense / myopeAppearances) / Math.log(2));
+		if (myopeandNoLense != 0)
+			myopeGain += -myopeandNoLense / myopeAppearances
+					* (Math.log(myopeandNoLense / myopeAppearances) / Math.log(2));
+		if (hyperandHardLense != 0)
+			hyperGain = -hyperandHardLense / hyperAppearances
+					* (Math.log(hyperandHardLense / hyperAppearances) / Math.log(2));
+		if (hyperandSoftLense != 0)
+			hyperGain += -hyperandSoftLense / hyperAppearances
+					* (Math.log(hyperandSoftLense / hyperAppearances) / Math.log(2));
+		if (hyperandNoLense != 0)
+			hyperGain += -hyperandNoLense / hyperAppearances
+					* (Math.log(hyperandNoLense / hyperAppearances) / Math.log(2));
 
 		gain = entropy
 				- (myopeAppearances / remaining.size() * myopeGain + hyperAppearances / remaining.size() * hyperGain);
@@ -270,10 +281,10 @@ public class EntropyCalc {
 	private double calculateAgeGain(ArrayList<Instance> remaining) {
 		double gain = 0;
 
+		double value1 = 0;
 		int age1andHardLense = 0;
 		int age1andSoftLense = 0;
 		int age1andNoLense = 0;
-		double value1 = 0;
 
 		double value2 = 0;
 		int age2andHardLense = 0;
@@ -316,6 +327,7 @@ public class EntropyCalc {
 					age3andNoLense++;
 			}
 		}
+
 		double age1Gain = 0;
 		double age2Gain = 0;
 		double age3Gain = 0;
@@ -338,9 +350,6 @@ public class EntropyCalc {
 			age3Gain += -age3andSoftLense / value3 * (Math.log(age3andSoftLense / value3) / Math.log(2));
 		if (age3andNoLense != 0)
 			age3Gain += -age3andNoLense / value3 * (Math.log(age3andNoLense / value3) / Math.log(2));
-
-		// Value 1 is 2, remaining is 6 , age1 gain is 1. 2/6 * 1 = 0.33333333 ,
-		// this is causing Nan.
 
 		gain = entropy - (value1 / remaining.size() * age1Gain + value2 / remaining.size() * age2Gain
 				+ value3 / remaining.size() * age3Gain);

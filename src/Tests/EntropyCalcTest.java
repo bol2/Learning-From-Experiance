@@ -1,5 +1,5 @@
 package Tests;
-import code.EntropyCalc;
+import code.EntropyCalculator;
 
 import static org.junit.Assert.*;
 
@@ -12,7 +12,7 @@ public class EntropyCalcTest {
 
 	@Before
 	public void CreateClass() {
-		EntropyCalc ec = new EntropyCalc();
+		EntropyCalculator ec = new EntropyCalculator();
 	}
 	
 	@Test

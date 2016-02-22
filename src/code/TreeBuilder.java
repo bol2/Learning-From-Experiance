@@ -1,15 +1,24 @@
 package code;
-
 import java.util.ArrayList;
+
+/**
+ * CS39440 Major Project: Learning From Experience TreeBuilder.java Purpose:
+ * Builds the tree using the data read in from from the file reader.Utalises the
+ * entropy calculator.
+ * 
+ * @author Ben Larking
+ * @version 1.4 22/02/16
+ */
 
 public class TreeBuilder {
 
-	private EntropyCalc ec;
+	private EntropyCalculator ec;
 	private ArrayList<Instance> remaining = null;
 	private ArrayList<Attribute> attributesRemaining = null;
 	private FileReader fr;
 
 	public TreeBuilder() {
+
 		fr = new FileReader();
 		remaining = fr.getInput();
 
@@ -19,11 +28,9 @@ public class TreeBuilder {
 		attributesRemaining.add(Attribute.ASTIGMATIC);
 		attributesRemaining.add(Attribute.TEARPRODRATE);
 
-		ec = new EntropyCalc();
+		ec = new EntropyCalculator();
 
 		MasterID3(remaining, attributesRemaining);
-		//printTree();
-
 	}
 
 	public void MasterID3(ArrayList<Instance> remaining, ArrayList<Attribute> attributesRemaining) {
@@ -56,92 +63,72 @@ public class TreeBuilder {
 
 	public void ID3(ArrayList<Instance> remaining, ArrayList<Attribute> attributesRemaining, Node perant) {
 
-		//while (attributesRemaining.size() > 0) {
+		// calculate the entropy and the highest gain
+		ec.calculateEntropy(remaining);
+		int attribute = ec.calculateHighestGain(remaining, attributesRemaining);
+		System.out.println("Attribute with highest Gain = " + getAttribute(attribute));
 
-			//if (perant.isUsed())
-				//break;
-			
-			// calculate the entropy and the highest gain
-			ec.calcEntropy(remaining);
-			int attribute = ec.calculateHighestGain(remaining, attributesRemaining);
-			System.out.println("Attribute with highest Gain = " + getAttribute(attribute));
+		// set root as highest gain and get the values for the node. Create
+		// branches for the values
+		Node root = perant;
 
-			// set root as highest gain and get the values for the node. Create
-			// branches for the
-			Node root = perant;
+		root.setAttribute(attribute);
+		AttributeGetter ag = new AttributeGetter(getAttribute(attribute));
+		root.setValues(ag.getAttributeValues());
+		System.out.println("This is the values for root" + root.getValues());
 
-			root.setAttribute(attribute);
-			AttributeGetter ag = new AttributeGetter(getAttribute(attribute));
-			root.setValues(ag.getAttributeValues());
-			System.out.println("This is the values for root" + root.getValues());
+		// Create branches for values
+		for (int i = 0; i < root.getValues().size(); i++) {
 
-			// Create branches for values
-			for (int i = 0; i < root.getValues().size(); i++) {
+			// Create a subset of values for each branch
+			ArrayList<Instance> temp = new ArrayList<Instance>();
+			for (int y = 0; y < remaining.size(); y++) {
+				if (remaining.get(y).getAttributeValue(attribute) == root.getValues().get(i)) {
+					System.out.println("Adding to temp on condition" + remaining.get(y).getAttributeValue(attribute)
+							+ " " + root.getValues().get(i));
+					temp.add(remaining.get(y));
+				}
+			}
 
-				// Create a subset of values for each branch
-				ArrayList<Instance> temp = new ArrayList<Instance>();
-				for (int y = 0; y < remaining.size(); y++) {
-					if (remaining.get(y).getAttribute(attribute) == root.getValues().get(i)) {
-						System.out.println("Adding to temp on condition" + remaining.get(y).getAttribute(attribute)
-								+ " " + root.getValues().get(i));
-						temp.add(remaining.get(y));
-					}
+			// If all values in subset are the same create a child Node
+			if (allSameClassification(temp) == true) {
+				// if all the same pull out
+				Node child = new Node();
+				System.out.println("All the above temp data had the same classification.");
+				for (int x = 0; x < temp.size(); x++) {
+					child.setData(i, temp.get(x));
+				}
+				System.out.println("Adding the above to a child and setting it to root's child.");
+				root.setChildren(child);
+			}
+
+			// Add a subtree
+			else if (allSameClassification(temp) == false) {
+
+				// Remove an attribute
+				ArrayList<Attribute> tempAttributesRemaining = new ArrayList<Attribute>(attributesRemaining);
+				tempAttributesRemaining.remove(attribute);
+
+				Node child = new Node();
+
+				for (int x = 0; x < temp.size(); x++) {
+					child.setData(i, temp.get(x));
+				}
+
+				child.setAttribute(attribute);
+				root.setChildren(child);
+
+				System.out.println("This is the passed in one " + perant.getAttribute());
+				for (int o = 0; o < root.getChildren().size(); o++) {
+					System.out.print("Set for the new root" + root.getChildren().get(o).getData());
 				}
 				
+				System.out.println();
+				System.out.println("Created a child and assigned above to root.");
 
-				// If all values in subset are the same create a child Node
-				if (allSameClassification(temp) == true) {
-					// if all the same pull out
-					Node child = new Node();
-					//child.setAttribute(attribute);
-					System.out.println("All the above temp data had the same classification.");
-					for (int x = 0; x < temp.size(); x++) {
-						child.setData(i, temp.get(x));
-					}
-					System.out.println("Adding the above to a child and setting it to root's child.");
-					root.setChildren(child);
-				}
-
-				// Add a subtree
-				else if (allSameClassification(temp) == false){
-
-					// Remove an attribute
-					ArrayList<Attribute> tempAttributesRemaining = new ArrayList<Attribute>(attributesRemaining);
-					tempAttributesRemaining.remove(attribute);
-					
-					Node child = new Node();
-					//child.setAttribute(attribute);
-					
-					for (int x = 0; x < temp.size(); x++) {
-						child.setData(i, temp.get(x));
-					}
-					
-					child.setAttribute(attribute);
-					
-					
-					root.setChildren(child);
-					
-					//perant.setChildren(root);
-
-						System.out.println("This is the passed in one " + perant.getAttribute());
-
-						for (int o = 0; o < root.getChildren().size(); o++) {
-							System.out.print("Set for the new root" + root.getChildren().get(o).getData());
-						}
-						System.out.println();
-					
-
-					System.out.println("Created a child and assigned above to root.");
-
-					ID3(temp, tempAttributesRemaining, child);
-
-				}
-
-			} //first = root;
-
-		//}
-
-		//return;
+				ID3(temp, tempAttributesRemaining, child);
+			}
+		}
 	}
 
 	public boolean allSameClassification(ArrayList<Instance> remaining) {
@@ -155,7 +142,6 @@ public class TreeBuilder {
 			if (remaining.get(i).getClassification() != testInstance.getClassification())
 				allSame = false;
 		}
-
 		return allSame;
 	}
 
@@ -163,30 +149,29 @@ public class TreeBuilder {
 		Attribute a = null;
 
 		if (i == 0)
-			a = a.AGE;
+			a = Attribute.AGE;
 		else if (i == 1)
-			a = a.PERSCRIPTION;
+			a = Attribute.PERSCRIPTION;
 		else if (i == 2)
-			a = a.ASTIGMATIC;
+			a = Attribute.ASTIGMATIC;
 		else if (i == 3)
-			a = a.TEARPRODRATE;
-
+			a = Attribute.TEARPRODRATE;
 		return a;
 	}
 
 	// Method to Print the Tree
 	public void printTree(Node root) {
-		
+
 		System.out.println("This is the end!");
 		System.out.println();
-		
+
 		System.out.println("this is the attribute of first " + root.getAttribute());
 		System.out.println("this is the value of first children amount " + root.getChildren().size());
 		System.out.println("These are the firsts values " + root.getValues());
 		System.out.println("first child " + root.getChildren().get(0).getData());
 		System.out.println("second child " + root.getChildren().get(1).getData());
 		System.out.println();
-		
+
 		Node second = root.getChildren().get(1);
 		System.out.println("this is the attribute of second " + second.getAttribute());
 		System.out.println("this is the value of second children amount " + second.getChildren().size());
@@ -201,14 +186,14 @@ public class TreeBuilder {
 		System.out.println("third child data " + third.getChildren().get(1).getData());
 		System.out.println("third child data " + third.getChildren().get(2).getData());
 		System.out.println();
-		
+
 		Node four = root.getChildren().get(1).getChildren().get(1);
 		System.out.println("four child attribute " + four.getAttribute());
 		System.out.println("this is the value of third children amount " + four.getChildren().size());
 		System.out.println("four child data " + four.getChildren().get(0).getData());
 		System.out.println("four child data " + four.getChildren().get(1).getData());
 		System.out.println();
-		
+
 		Node fith = root.getChildren().get(1).getChildren().get(0).getChildren().get(2);
 		System.out.println("fith child attribute " + fith.getAttribute());
 		System.out.println("this is the value of fith children amount " + fith.getChildren().size());
@@ -221,10 +206,8 @@ public class TreeBuilder {
 		System.out.println("this is the value of fith children amount " + six.getChildren().size());
 		System.out.println("six child data " + six.getChildren().get(0).getData());
 		System.out.println("six child data " + six.getChildren().get(1).getData());
-		System.out.println("six child data " + six.getChildren().get(1).getData().get(0).values().stream().findFirst().get().getClassification());
+		System.out.println("six child data "
+				+ six.getChildren().get(1).getData().get(0).values().stream().findFirst().get().getClassification());
 		System.out.println();
-		
-
 	}
-
 }
