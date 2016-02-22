@@ -1,6 +1,15 @@
 package code;
 import java.util.ArrayList;
 
+/**
+ * CS39440 Major Project: Learning From Experience 
+ * AttributeGetter.java
+ * Purpose: A class that can link integer numbers to attributes and return an array of integers for attribute values 	
+ * 
+ * @author Ben Larking
+ * @version 1.4 22/02/16
+ */
+
 public class AttributeGetter {
 
 	Attribute A;
