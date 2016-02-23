@@ -120,7 +120,7 @@ public class TreeBuilder {
 
 				System.out.println("This is the passed in one " + perant.getAttribute());
 				for (int o = 0; o < root.getChildren().size(); o++) {
-					System.out.print("Set for the new root" + root.getChildren().get(o).getData());
+					System.out.println("Set for the new root" + root.getChildren().get(o).getData());
 				}
 				
 				System.out.println();
@@ -132,7 +132,6 @@ public class TreeBuilder {
 	}
 
 	public boolean allSameClassification(ArrayList<Instance> remaining) {
-
 		// Test if all examples are the same, if so return single node tree
 		boolean allSame = true;
 
@@ -169,6 +168,7 @@ public class TreeBuilder {
 		System.out.println("this is the value of first children amount " + root.getChildren().size());
 		System.out.println("These are the firsts values " + root.getValues());
 		System.out.println("first child " + root.getChildren().get(0).getData());
+		//System.out.println("first child " + root.getChildren().get(0).getData().get(0).values().stream().findFirst().get().getClassification());
 		System.out.println("second child " + root.getChildren().get(1).getData());
 		System.out.println();
 
@@ -206,8 +206,9 @@ public class TreeBuilder {
 		System.out.println("this is the value of fith children amount " + six.getChildren().size());
 		System.out.println("six child data " + six.getChildren().get(0).getData());
 		System.out.println("six child data " + six.getChildren().get(1).getData());
+		System.out.println("six child data " + six.getChildren().get(2).getData());
 		System.out.println("six child data "
 				+ six.getChildren().get(1).getData().get(0).values().stream().findFirst().get().getClassification());
-		System.out.println();
+		//System.out.println();
 	}
 }
