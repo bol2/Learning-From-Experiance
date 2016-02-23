@@ -12,7 +12,7 @@ import java.util.Scanner;
  * Purpose: To read data set in from a file and create new instances from the data
  * 
  * @author Ben Larking
- * @version 1.4 22/02/16
+ * @version 1.5 23/02/16
  */
 
 public class FileReader {
