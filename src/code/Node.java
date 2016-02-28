@@ -9,21 +9,23 @@ import java.util.HashMap;
  * an attribute, an array list of children, possible values and its own data. 
  * 
  * @author Ben Larking
- * @version 1.4 22/02/16
+ * @version 1.5 23/02/16
  */
 
 public class Node {
 
-	private ArrayList<Integer> values;
+	private ArrayList<Integer> branchValues;
 	private int attribute;
 	private ArrayList<Node> children;
-	private ArrayList<HashMap<Integer, Instance>> data;
+	private ArrayList<HashMap<Integer, Instance>> childData;
+	private ArrayList<Instance> ownData;
 	
 	public Node(){	
-		this.data = new ArrayList<HashMap<Integer, Instance>>();
+		this.childData = new ArrayList<HashMap<Integer, Instance>>();
 		this.children = new ArrayList<Node>();
-		this.values = new ArrayList<Integer>();
-		this.attribute = 0;	
+		this.branchValues = new ArrayList<Integer>();
+		this.ownData = new ArrayList<Instance>();
+		this.attribute = 4;	
 	}
 
 	public ArrayList<Node> getChildren() {
@@ -35,21 +37,21 @@ public class Node {
 	}
 
 	public ArrayList<HashMap<Integer, Instance>> getData() {
-		return data;
+		return childData;
 	}
 
 	public void setData(Integer key, Instance value) {
 		HashMap<Integer, Instance> data1 = new HashMap<Integer, Instance>();
 		data1.put(key, value);
-		this.data.add(data1);
+		this.childData.add(data1);
 	}
 	
 	public ArrayList<Integer> getValues() {
-		return values;
+		return branchValues;
 	}
 
 	public void setValues(ArrayList<Integer> values) {
-		this.values = values;
+		this.branchValues = values;
 	}
 
 	public int getAttribute() {
@@ -58,5 +60,14 @@ public class Node {
 
 	public void setAttribute(int attribute) {
 		this.attribute = attribute;
+	}
+
+	public ArrayList<Instance> getOwnData() {
+		return ownData;
+	}
+
+	public void setOwnData(ArrayList<Instance> remaining) {
+		//this.ownData.add(remaining);
+		this.ownData = remaining;
 	}
 }

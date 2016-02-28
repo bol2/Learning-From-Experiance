@@ -12,13 +12,13 @@ import java.util.Scanner;
  * Purpose: To read data set in from a file and create new instances from the data
  * 
  * @author Ben Larking
- * @version 1.4 22/02/16
+ * @version 1.5 23/02/16
  */
 
 public class FileReader {
 
-	public static final String file = "src/LensData.txt";
-	private ArrayList<Instance> input = null;
+	private String file = "src/LensData.txt";
+	private ArrayList<Instance> input;
 
 	public FileReader() {
 		input = new ArrayList<Instance>();
@@ -32,13 +32,13 @@ public class FileReader {
 			while (scanner.hasNext()) {
 				if (scanner.hasNextInt()) {
 					int id_key = scanner.nextInt();
-					int first_key = scanner.nextInt();
-					int second_key = scanner.nextInt();
-					int third_key = scanner.nextInt();
-					int fourth_key = scanner.nextInt();
-					int fith_key = scanner.nextInt();
+					int age = scanner.nextInt();
+					int preseription = scanner.nextInt();
+					int astigmatic = scanner.nextInt();
+					int tearProdRate = scanner.nextInt();
+					int classification = scanner.nextInt();
 
-					Instance instance = new Instance(first_key, second_key, third_key, fourth_key, fith_key, id_key);
+					Instance instance = new Instance(age, preseription, astigmatic, tearProdRate, classification, id_key);
 					input.add(instance);
 				}
 			}

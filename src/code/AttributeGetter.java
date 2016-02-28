@@ -28,6 +28,8 @@ public class AttributeGetter {
 			return 2;
 		case TEARPRODRATE:
 			return 3;
+		case LEAF:
+			return 4;
 
 		default:
 			System.out.println("Undefined Attribute");

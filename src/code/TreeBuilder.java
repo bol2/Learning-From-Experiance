@@ -1,5 +1,9 @@
 package code;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * CS39440 Major Project: Learning From Experience TreeBuilder.java Purpose:
@@ -7,7 +11,7 @@ import java.util.ArrayList;
  * entropy calculator.
  * 
  * @author Ben Larking
- * @version 1.4 22/02/16
+ * @version 1.5 23/02/16
  */
 
 public class TreeBuilder {
@@ -57,7 +61,10 @@ public class TreeBuilder {
 		}
 
 		ID3(remaining, attributesRemaining, root);
-		printTree(root);
+		printTree(root, 0);
+		System.out.println();
+		System.out.println();
+		printTree2(root, 0);
 
 	}
 
@@ -71,6 +78,7 @@ public class TreeBuilder {
 		// set root as highest gain and get the values for the node. Create
 		// branches for the values
 		Node root = perant;
+		root.setOwnData(remaining);
 
 		root.setAttribute(attribute);
 		AttributeGetter ag = new AttributeGetter(getAttribute(attribute));
@@ -83,6 +91,7 @@ public class TreeBuilder {
 			// Create a subset of values for each branch
 			ArrayList<Instance> temp = new ArrayList<Instance>();
 			for (int y = 0; y < remaining.size(); y++) {
+
 				if (remaining.get(y).getAttributeValue(attribute) == root.getValues().get(i)) {
 					System.out.println("Adding to temp on condition" + remaining.get(y).getAttributeValue(attribute)
 							+ " " + root.getValues().get(i));
@@ -94,12 +103,15 @@ public class TreeBuilder {
 			if (allSameClassification(temp) == true) {
 				// if all the same pull out
 				Node child = new Node();
+				child.setOwnData(temp);
 				System.out.println("All the above temp data had the same classification.");
 				for (int x = 0; x < temp.size(); x++) {
 					child.setData(i, temp.get(x));
 				}
 				System.out.println("Adding the above to a child and setting it to root's child.");
+
 				root.setChildren(child);
+
 			}
 
 			// Add a subtree
@@ -113,6 +125,7 @@ public class TreeBuilder {
 
 				for (int x = 0; x < temp.size(); x++) {
 					child.setData(i, temp.get(x));
+					// root.setOwnData(remaining.get(x));
 				}
 
 				child.setAttribute(attribute);
@@ -120,9 +133,9 @@ public class TreeBuilder {
 
 				System.out.println("This is the passed in one " + perant.getAttribute());
 				for (int o = 0; o < root.getChildren().size(); o++) {
-					System.out.print("Set for the new root" + root.getChildren().get(o).getData());
+					System.out.println("Set for the new root" + root.getChildren().get(o).getData());
 				}
-				
+
 				System.out.println();
 				System.out.println("Created a child and assigned above to root.");
 
@@ -132,7 +145,6 @@ public class TreeBuilder {
 	}
 
 	public boolean allSameClassification(ArrayList<Instance> remaining) {
-
 		// Test if all examples are the same, if so return single node tree
 		boolean allSame = true;
 
@@ -147,7 +159,6 @@ public class TreeBuilder {
 
 	public Attribute getAttribute(int i) {
 		Attribute a = null;
-
 		if (i == 0)
 			a = Attribute.AGE;
 		else if (i == 1)
@@ -156,58 +167,75 @@ public class TreeBuilder {
 			a = Attribute.ASTIGMATIC;
 		else if (i == 3)
 			a = Attribute.TEARPRODRATE;
+		else if (i == 4)
+			a = Attribute.LEAF;
 		return a;
 	}
 
 	// Method to Print the Tree
-	public void printTree(Node root) {
+	public void printTree(Node root, int level) {
 
-		System.out.println("This is the end!");
-		System.out.println();
+		System.out.println("\nAtribute: " + getAttribute(root.getAttribute()));
+		for (int i = 0; i < root.getOwnData().size(); i++) {
+			System.out.print(root.getOwnData().get(i).getId());
+		}
 
-		System.out.println("this is the attribute of first " + root.getAttribute());
-		System.out.println("this is the value of first children amount " + root.getChildren().size());
-		System.out.println("These are the firsts values " + root.getValues());
-		System.out.println("first child " + root.getChildren().get(0).getData());
-		System.out.println("second child " + root.getChildren().get(1).getData());
-		System.out.println();
+		for (int k = 0; k < root.getValues().size(); k++) {
+			printTree(root.getChildren().get(k), 0);
+		}
 
-		Node second = root.getChildren().get(1);
-		System.out.println("this is the attribute of second " + second.getAttribute());
-		System.out.println("this is the value of second children amount " + second.getChildren().size());
-		System.out.println("Seconds child data " + second.getChildren().get(0).getData());
-		System.out.println("Seconds child data " + second.getChildren().get(1).getData());
-		System.out.println();
-
-		Node third = root.getChildren().get(1).getChildren().get(0);
-		System.out.println("third child attribute " + third.getAttribute());
-		System.out.println("this is the value of third children amount " + third.getChildren().size());
-		System.out.println("third child data " + third.getChildren().get(0).getData());
-		System.out.println("third child data " + third.getChildren().get(1).getData());
-		System.out.println("third child data " + third.getChildren().get(2).getData());
-		System.out.println();
-
-		Node four = root.getChildren().get(1).getChildren().get(1);
-		System.out.println("four child attribute " + four.getAttribute());
-		System.out.println("this is the value of third children amount " + four.getChildren().size());
-		System.out.println("four child data " + four.getChildren().get(0).getData());
-		System.out.println("four child data " + four.getChildren().get(1).getData());
-		System.out.println();
-
-		Node fith = root.getChildren().get(1).getChildren().get(0).getChildren().get(2);
-		System.out.println("fith child attribute " + fith.getAttribute());
-		System.out.println("this is the value of fith children amount " + fith.getChildren().size());
-		System.out.println("fith child data " + fith.getChildren().get(0).getData());
-		System.out.println("fith child data " + fith.getChildren().get(1).getData());
-		System.out.println();
-
-		Node six = root.getChildren().get(1).getChildren().get(1).getChildren().get(1);
-		System.out.println("six child attribute " + six.getAttribute());
-		System.out.println("this is the value of fith children amount " + six.getChildren().size());
-		System.out.println("six child data " + six.getChildren().get(0).getData());
-		System.out.println("six child data " + six.getChildren().get(1).getData());
-		System.out.println("six child data "
-				+ six.getChildren().get(1).getData().get(0).values().stream().findFirst().get().getClassification());
-		System.out.println();
 	}
+
+	public void printTree2(Node root, int level) {
+		// Get amount of children ( -1 will be a leaf)
+		int k = root.getChildren().size() - 1;
+
+		// If not a leaf continue going down tree
+		if (k != -1)
+			printTree2(root.getChildren().get(k), level + 1);
+
+		// If we're not at the top of the tree, first time will be at the bottom
+		if (level != 0) {
+
+			// For every level print some white space
+			for (int i = 0; i < level - 1; i++) {
+				System.out.print("|\t");
+			}
+			if (root.getAttribute() == 4) {
+
+				// Print a line of data
+				System.out.print("|-------");
+				for (int i = 0; i < root.getOwnData().size(); i++) {
+					System.out.print(root.getOwnData().get(i).getId() + ", ");
+				}
+				System.out.println();
+			}else {
+				// Print a line of data
+				System.out.print("|-------");
+				for (int i = 0; i < root.getOwnData().size(); i++) {
+					System.out.print(root.getOwnData().get(i).getId() + ", ");
+				}
+				System.out.println();
+				if (k!= 1)
+				printTree2(root.getChildren().get(k -2), level + 1);
+				if (k!= 0)
+					printTree2(root.getChildren().get(k -1), level + 1);
+				
+				
+			}
+
+		} else {
+			for (int i = 0; i < root.getOwnData().size(); i++) {
+				System.out.print(root.getOwnData().get(i).getId() + ", ");
+			}
+			
+			System.out.println();
+			printTree2(root.getChildren().get(k-1), level + 1);
+		}
+		
+		 
+		 
+
+	}
+
 }
