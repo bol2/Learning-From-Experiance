@@ -61,7 +61,10 @@ public class TreeBuilder {
 		}
 
 		ID3(remaining, attributesRemaining, root);
-		printTree(root);
+		printTree(root, 0);
+		System.out.println();
+		System.out.println();
+		printTree2(root, 0);
 
 	}
 
@@ -170,17 +173,69 @@ public class TreeBuilder {
 	}
 
 	// Method to Print the Tree
-	public void printTree(Node root) {
-		//System.out.println("------ Start ----- ");
-		System.out.println("Atribute: " + getAttribute(root.getAttribute()));
-		for (int i = 0; i < root.getOwnData().size(); i ++){
-			System.out.println(root.getOwnData().get(i).getId());
+	public void printTree(Node root, int level) {
+
+		System.out.println("\nAtribute: " + getAttribute(root.getAttribute()));
+		for (int i = 0; i < root.getOwnData().size(); i++) {
+			System.out.print(root.getOwnData().get(i).getId());
 		}
-		
+
 		for (int k = 0; k < root.getValues().size(); k++) {
-			printTree(root.getChildren().get(k));
+			printTree(root.getChildren().get(k), 0);
+		}
+
+	}
+
+	public void printTree2(Node root, int level) {
+		// Get amount of children ( -1 will be a leaf)
+		int k = root.getChildren().size() - 1;
+
+		// If not a leaf continue going down tree
+		if (k != -1)
+			printTree2(root.getChildren().get(k), level + 1);
+
+		// If we're not at the top of the tree, first time will be at the bottom
+		if (level != 0) {
+
+			// For every level print some white space
+			for (int i = 0; i < level - 1; i++) {
+				System.out.print("|\t");
+			}
+			if (root.getAttribute() == 4) {
+
+				// Print a line of data
+				System.out.print("|-------");
+				for (int i = 0; i < root.getOwnData().size(); i++) {
+					System.out.print(root.getOwnData().get(i).getId() + ", ");
+				}
+				System.out.println();
+			}else {
+				// Print a line of data
+				System.out.print("|-------");
+				for (int i = 0; i < root.getOwnData().size(); i++) {
+					System.out.print(root.getOwnData().get(i).getId() + ", ");
+				}
+				System.out.println();
+				if (k!= 1)
+				printTree2(root.getChildren().get(k -2), level + 1);
+				if (k!= 0)
+					printTree2(root.getChildren().get(k -1), level + 1);
+				
+				
+			}
+
+		} else {
+			for (int i = 0; i < root.getOwnData().size(); i++) {
+				System.out.print(root.getOwnData().get(i).getId() + ", ");
+			}
+			
+			System.out.println();
+			printTree2(root.getChildren().get(k-1), level + 1);
 		}
 		
+		 
+		 
+
 	}
-		
+
 }

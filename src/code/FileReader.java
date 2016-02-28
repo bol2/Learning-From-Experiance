@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class FileReader {
 
 	private String file = "src/LensData.txt";
-	private ArrayList<Instance> input = null;
+	private ArrayList<Instance> input;
 
 	public FileReader() {
 		input = new ArrayList<Instance>();
