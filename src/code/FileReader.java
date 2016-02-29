@@ -12,20 +12,24 @@ import java.util.Scanner;
  * Purpose: To read data set in from a file and create new instances from the data
  * 
  * @author Ben Larking
- * @version 1.5 23/02/16
+ * @version 1.5 29/02/16
  */
 
 public class FileReader {
 
-	private String file = "src/LensData.txt";
+	private String file;
 	private ArrayList<Instance> input;
+	private ArrayList<Instance> testData;
 
 	public FileReader() {
 		input = new ArrayList<Instance>();
+		testData = new ArrayList<Instance>();
 		readFile();
 	}
 
 	public void readFile() {
+		
+		file = "src/LensData.txt";
 
 		try {
 			Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(new FileInputStream(file))));
@@ -47,9 +51,36 @@ public class FileReader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		file = "src/ClassificationData.txt";
+		
+		try {
+			Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(new FileInputStream(file))));
+			while (scanner.hasNext()) {
+				if (scanner.hasNextInt()) {
+					int id_key = scanner.nextInt();
+					int age = scanner.nextInt();
+					int preseription = scanner.nextInt();
+					int astigmatic = scanner.nextInt();
+					int tearProdRate = scanner.nextInt();
+					int classification = scanner.nextInt();
+
+					Instance instance = new Instance(age, preseription, astigmatic, tearProdRate, classification, id_key);
+					testData.add(instance);
+				}
+			}
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList<Instance> getInput() {
 		return input;
+	}
+	
+	public ArrayList<Instance> getTestData() {
+		return testData;
 	}
 }
