@@ -20,6 +20,7 @@ public class TreeBuilder {
 	private ArrayList<Instance> remaining = null;
 	private ArrayList<Attribute> attributesRemaining = null;
 	private FileReader fr;
+	private Node first;
 
 	public TreeBuilder() {
 
@@ -65,6 +66,7 @@ public class TreeBuilder {
 		System.out.println();
 		System.out.println();
 		printTree2(root, 0);
+		first = root;
 
 	}
 
@@ -232,10 +234,10 @@ public class TreeBuilder {
 			System.out.println();
 			printTree2(root.getChildren().get(k-1), level + 1);
 		}
-		
-		 
-		 
+	}
 
+	public Node getRoot() {
+		return first;
 	}
 
 }
