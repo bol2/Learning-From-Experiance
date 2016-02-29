@@ -9,7 +9,7 @@ import java.util.HashMap;
  * an attribute, an array list of children, possible values and its own data. 
  * 
  * @author Ben Larking
- * @version 1.5 23/02/16
+ * @version 1.5 29/02/16
  */
 
 public class Node {
@@ -69,5 +69,13 @@ public class Node {
 	public void setOwnData(ArrayList<Instance> remaining) {
 		//this.ownData.add(remaining);
 		this.ownData = remaining;
+	}
+	
+	public void setClassifiedData(Instance i) {
+		ownData.add(i);
+	}
+	
+	public void removeClassifyData(Instance i) {
+		ownData.remove(i);
 	}
 }

@@ -11,7 +11,7 @@ import java.util.Map;
  * entropy calculator.
  * 
  * @author Ben Larking
- * @version 1.5 23/02/16
+ * @version 1.4 23/02/16
  */
 
 public class TreeBuilder {

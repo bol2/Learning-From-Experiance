@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Purpose: Initiates the start of the program by creating a tree builder class
  * 
  * @author Ben Larking
- * @version 1.4 22/02/16
+ * @version 1.5 29/02/16
  */
 
 public class Classifier {
@@ -36,8 +36,27 @@ public class Classifier {
 		
 		for (Instance i : testData){
 			Node n = tb.getRoot();
-			
-			n.getAttribute();
+			sortNode(n, i);
+			tb.printTree2(n, 0);
+		}
+	}
+	
+	private void sortNode(Node node, Instance i){
+		int attribute = node.getAttribute();
+		int instanceAttributeValue = i.getAttributeValue(attribute);
+		ArrayList<Integer> values = node.getValues();
+		for (Integer value : values){
+			if (value == instanceAttributeValue){
+				Node child = node.getChildren().get(value-1);
+				child.setClassifiedData(i);
+				
+				if (child.getAttribute() == 4){
+					return;
+				}else {
+				 //child.removeClassifyData(i);
+				 sortNode(child, i);
+				}
+			}
 		}
 	}
 
