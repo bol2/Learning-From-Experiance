@@ -25,7 +25,7 @@ public class Classifier {
 	public Classifier(){
 		tb = new TreeBuilder();
 		fr = new FileReader();
-		classify(fr.getTestData());
+		//classify(fr.getTestData());
 	}
 	
 	private void classify(ArrayList<Instance> testData){

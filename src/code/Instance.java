@@ -1,16 +1,19 @@
 package code;
 
+import java.lang.reflect.Field;
+import java.util.Properties;
+
 /**
- * CS39440 Major Project: Learning From Experience
- * Instance.java
- * Purpose: Represents a single instance from the data set with named attributes
+ * CS39440 Major Project: Learning From Experience Instance.java Purpose:
+ * Represents a single instance from the data set with named attributes
  * 
  * @author Ben Larking
  * @version 2.0 04/03/16
  */
 
 public class Instance {
-	
+
+	private int classification;
 	private int handicapped_infants;
 	private int water_project_cost_sharing;
 	private int adoption_of_the_budget_resolution;
@@ -27,18 +30,17 @@ public class Instance {
 	private int crime;
 	private int duty_free_exports;
 	private int export_administration_act_south_africa;
-	
-	private int classification; 
-	private int id;
-	
-	public Instance(){}
 
-	public Instance(int handicapped_infants, int water_project_cost_sharing, int adoption_of_the_budget_resolution,
-			int physician_fee_freeze, int el_salvador_aid, int religious_groups_in_schools, int anti_satellite_test_ban,
-			int aid_to_nicaraguan_contras, int mx_missile, int immigration, int synfuels_corporation_cutback,
-			int education_spending, int superfund_right_to_sue, int crime, int duty_free_exports,
-			int export_administration_act_south_africa, int classification, int id) {
-		
+	public Instance() {
+	}
+
+	public Instance(int classification, int handicapped_infants, int water_project_cost_sharing,
+			int adoption_of_the_budget_resolution, int physician_fee_freeze, int el_salvador_aid,
+			int religious_groups_in_schools, int anti_satellite_test_ban, int aid_to_nicaraguan_contras, int mx_missile,
+			int immigration, int synfuels_corporation_cutback, int education_spending, int superfund_right_to_sue,
+			int crime, int duty_free_exports, int export_administration_act_south_africa) {
+
+		this.classification = classification;
 		this.handicapped_infants = handicapped_infants;
 		this.water_project_cost_sharing = water_project_cost_sharing;
 		this.adoption_of_the_budget_resolution = adoption_of_the_budget_resolution;
@@ -55,8 +57,7 @@ public class Instance {
 		this.crime = crime;
 		this.duty_free_exports = duty_free_exports;
 		this.export_administration_act_south_africa = export_administration_act_south_africa;
-		this.classification = classification;
-		this.id = id;
+
 	}
 
 	public int getHandicapped_infants() {
@@ -195,34 +196,116 @@ public class Instance {
 		this.classification = classification;
 	}
 
-	public int getId() {
-		return id;
-	}
+	public int getAttributeValue(int i) {
+		if (i == 1)
+			return this.getHandicapped_infants();
+		else if (i == 2)
+			return this.getWater_project_cost_sharing();
+		else if (i == 3)
+			return this.getAdoption_of_the_budget_resolution();
+		else if (i == 4)
+			return this.getPhysician_fee_freeze();
+		else if (i == 5)
+			return this.getEl_salvador_aid();
+		else if (i == 6)
+			return this.getReligious_groups_in_schools();
+		else if (i == 7)
+			return this.getAnti_satellite_test_ban();
+		else if (i == 8)
+			return this.getAid_to_nicaraguan_contras();
+		else if (i == 9)
+			return this.getMx_missile();
+		else if (i == 10)
+			return this.getImmigration();
+		else if (i == 11)
+			return this.getSynfuels_corporation_cutback();
+		else if (i == 12)
+			return this.getEducation_spending();
+		else if (i == 13)
+			return this.getSuperfund_right_to_sue();
+		else if (i == 14)
+			return this.getCrime();
+		else if (i == 15)
+			return this.getDuty_free_exports();
+		else if (i == 16)
+			return this.getExport_administration_act_south_africa();
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public int getAttributeValue(int i){
-		if (i == 1) return this.getHandicapped_infants();
-		else if(i == 2) return this.getWater_project_cost_sharing();
-		else if(i == 3) return this.getAdoption_of_the_budget_resolution();
-		else if(i == 4) return this.getPhysician_fee_freeze();
-		else if(i == 5) return this.getEl_salvador_aid();
-		else if(i == 6) return this.getReligious_groups_in_schools();
-		else if(i == 7) return this.getAnti_satellite_test_ban();
-		else if(i == 8) return this.getAid_to_nicaraguan_contras();
-		else if(i == 9) return this.getMx_missile();
-		else if(i == 10) return this.getImmigration();
-		else if(i == 11) return this.getSynfuels_corporation_cutback();
-		else if(i == 12) return this.getEducation_spending();
-		else if(i == 13) return this.getSuperfund_right_to_sue();
-		else if(i == 14) return this.getCrime();
-		else if(i == 15) return this.getDuty_free_exports();
-		else if(i == 16) return this.getExport_administration_act_south_africa();
-		
 		return 0;
 	}
 
-	
+	public void setAttributeValue(int i, int value) {
+		if (i == 0)
+			this.setClassification(value);
+		else if (i == 1)
+			this.setHandicapped_infants(value);
+		else if (i == 2)
+			this.setWater_project_cost_sharing(value);
+		else if (i == 3)
+			this.setAdoption_of_the_budget_resolution(value);
+		else if (i == 4)
+			this.setPhysician_fee_freeze(value);
+		else if (i == 5)
+			this.setEl_salvador_aid(value);
+		else if (i == 6)
+			this.setReligious_groups_in_schools(value);
+		else if (i == 7)
+			this.setAnti_satellite_test_ban(value);
+		else if (i == 8)
+			this.setAid_to_nicaraguan_contras(value);
+		else if (i == 9)
+			this.setMx_missile(value);
+		else if (i == 10)
+			this.setImmigration(value);
+		else if (i == 11)
+			this.setSynfuels_corporation_cutback(value);
+		else if (i == 12)
+			this.setEducation_spending(value);
+		else if (i == 13)
+			this.setSuperfund_right_to_sue(value);
+		else if (i == 14)
+			this.setCrime(value);
+		else if (i == 15)
+			this.setDuty_free_exports(value);
+		else if (i == 16)
+			this.setExport_administration_act_south_africa(value);
+	}
+
+	public String toString() {
+		StringBuffer result = new StringBuffer();
+
+		Field[] fields = this.getClass().getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+			if (i > 0) {
+				result.append(",");
+			}
+			try {
+
+				if (i == 0) {
+					if (fields[i].get(this).equals(1)) {
+						result.append("republican");
+					} else if (fields[i].get(this).equals(2)) {
+						result.append("democrat");
+					}
+				} else {
+					if (fields[i].get(this).equals(1)) {
+						result.append("y");
+					} else if (fields[i].get(this).equals(2)) {
+						result.append("n");
+					} else if (fields[i].get(this).equals(3)) {
+						result.append("?");
+					}
+				}
+
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result.toString();
+
+	}
+
 }
