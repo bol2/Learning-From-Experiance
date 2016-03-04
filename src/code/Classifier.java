@@ -29,7 +29,7 @@ public class Classifier {
 	}
 	
 	private void classify(ArrayList<Instance> testData){
-		
+		System.out.println();
 		for (Instance i : testData){
 			System.out.println(i.getId());
 		}
@@ -37,7 +37,10 @@ public class Classifier {
 		for (Instance i : testData){
 			Node n = tb.getRoot();
 			sortNode(n, i);
+			n.setClassifiedData(i);
+			System.out.println();
 			tb.printTree2(n, 0);
+		
 		}
 	}
 	
