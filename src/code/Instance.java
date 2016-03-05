@@ -197,40 +197,40 @@ public class Instance {
 	}
 
 	public int getAttributeValue(int i) {
-		if (i == 1)
+		if (i == 0)
 			return this.getHandicapped_infants();
-		else if (i == 2)
+		else if (i == 1)
 			return this.getWater_project_cost_sharing();
-		else if (i == 3)
+		else if (i == 2)
 			return this.getAdoption_of_the_budget_resolution();
-		else if (i == 4)
+		else if (i == 3)
 			return this.getPhysician_fee_freeze();
-		else if (i == 5)
+		else if (i == 4)
 			return this.getEl_salvador_aid();
-		else if (i == 6)
+		else if (i == 5)
 			return this.getReligious_groups_in_schools();
-		else if (i == 7)
+		else if (i == 6)
 			return this.getAnti_satellite_test_ban();
-		else if (i == 8)
+		else if (i == 7)
 			return this.getAid_to_nicaraguan_contras();
-		else if (i == 9)
+		else if (i == 8)
 			return this.getMx_missile();
-		else if (i == 10)
+		else if (i == 9)
 			return this.getImmigration();
-		else if (i == 11)
+		else if (i == 10)
 			return this.getSynfuels_corporation_cutback();
-		else if (i == 12)
+		else if (i == 11)
 			return this.getEducation_spending();
-		else if (i == 13)
+		else if (i == 12)
 			return this.getSuperfund_right_to_sue();
-		else if (i == 14)
+		else if (i == 13)
 			return this.getCrime();
-		else if (i == 15)
+		else if (i == 14)
 			return this.getDuty_free_exports();
-		else if (i == 16)
+		else if (i == 15)
 			return this.getExport_administration_act_south_africa();
 
-		return 0;
+		return 16;
 	}
 
 	public void setAttributeValue(int i, int value) {

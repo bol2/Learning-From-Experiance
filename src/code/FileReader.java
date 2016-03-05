@@ -55,7 +55,8 @@ public class FileReader {
 					}
 					attribute ++;
 				}
-				System.out.println(i.toString());
+				input.add(i);
+				//System.out.println(i.toString());
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

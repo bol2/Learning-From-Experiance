@@ -21,43 +21,41 @@ public class AttributeGetter {
 	public int getAttribute() {
 		switch (A) {
 		case handicapped_infants:
-			return 1;
-		case water_project_cost_sharing:
-			return 2;
-		case adoption_of_the_budget_resolution:
-			return 3;
-		case physician_fee_freeze:
-			return 4;
-		case el_salvador_aid:
-			return 5;
-		case religious_groups_in_schools:
-			return 6;
-		case anti_satellite_test_ban:
-			return 7;
-		case aid_to_nicaraguan_contras:
-			return 8;
-		case mx_missile:
-			return 9;
-		case immigration:
-			return 10;
-		case synfuels_corporation_cutback:
-			return 11;
-		case education_spending:
-			return 12;
-		case superfund_right_to_sue:
-			return 13;
-		case crime:
-			return 14;
-		case duty_free_exports:
-			return 15;
-		case export_administration_act_south_africa:
-			return 16;
-		case leaf:
 			return 0;
+		case water_project_cost_sharing:
+			return 1;
+		case adoption_of_the_budget_resolution:
+			return 2;
+		case physician_fee_freeze:
+			return 3;
+		case el_salvador_aid:
+			return 4;
+		case religious_groups_in_schools:
+			return 5;
+		case anti_satellite_test_ban:
+			return 6;
+		case aid_to_nicaraguan_contras:
+			return 7;
+		case mx_missile:
+			return 8;
+		case immigration:
+			return 9;
+		case synfuels_corporation_cutback:
+			return 10;
+		case education_spending:
+			return 11;
+		case superfund_right_to_sue:
+			return 12;
+		case crime:
+			return 13;
+		case duty_free_exports:
+			return 14;
+		case export_administration_act_south_africa:
+			return 15;
 
 		default:
 			System.out.println("Undefined Attribute");
-			return 4;
+			return 16;
 		}
 	}
 

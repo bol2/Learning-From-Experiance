@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class Node {
 
-	private ArrayList<Integer> branchValues;
+	private int[] branchValues = {1, 2};
 	private int attribute;
 	private ArrayList<Node> children;
 	private ArrayList<HashMap<Integer, Instance>> childData;
@@ -23,7 +23,6 @@ public class Node {
 	public Node(){	
 		this.childData = new ArrayList<HashMap<Integer, Instance>>();
 		this.children = new ArrayList<Node>();
-		this.branchValues = new ArrayList<Integer>();
 		this.ownData = new ArrayList<Instance>();
 		this.attribute = 4;	
 	}
@@ -46,12 +45,8 @@ public class Node {
 		this.childData.add(data1);
 	}
 	
-	public ArrayList<Integer> getValues() {
+	public int[] getValues() {
 		return branchValues;
-	}
-
-	public void setValues(ArrayList<Integer> values) {
-		this.branchValues = values;
 	}
 
 	public int getAttribute() {
