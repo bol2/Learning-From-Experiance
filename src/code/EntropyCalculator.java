@@ -18,11 +18,12 @@ public class EntropyCalculator {
 	double entropy;
 
 	public EntropyCalculator() {
+		this.entropy = 0;
 	}
 
-	public double calculateEntropy(ArrayList<Instance> instances) {
+	public void calculateEntropy(ArrayList<Instance> instances) {
 
-		entropy = 0;
+
 		int republican = 0;
 		int democrat = 0;
 
@@ -39,8 +40,6 @@ public class EntropyCalculator {
 			entropy += -republican / dataSetSize * (Math.log(republican / dataSetSize) / Math.log(2));
 		if (democrat != 0)
 			entropy += -democrat / dataSetSize * (Math.log(democrat / dataSetSize) / Math.log(2));
-
-		return entropy;
 	}
 
 	public int calculateHighestGain(ArrayList<Instance> remaining, ArrayList<Attribute> attributesRemaining) {

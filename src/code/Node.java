@@ -17,14 +17,14 @@ public class Node {
 	private int[] branchValues = {1, 2};
 	private int attribute;
 	private ArrayList<Node> children;
-	private ArrayList<HashMap<Integer, Instance>> childData;
 	private ArrayList<Instance> ownData;
+	private Node right = null;;
+	private Node left = null;
 	
 	public Node(){	
-		this.childData = new ArrayList<HashMap<Integer, Instance>>();
 		this.children = new ArrayList<Node>();
 		this.ownData = new ArrayList<Instance>();
-		this.attribute = 4;	
+		this.attribute = 16;	
 	}
 
 	public ArrayList<Node> getChildren() {
@@ -32,17 +32,9 @@ public class Node {
 	}
 
 	public void setChildren(Node children) {
+		if (this.getRight() == null) right = children;
+		else if (this.getLeft() == null) left = children;
 		this.children.add(children);
-	}
-
-	public ArrayList<HashMap<Integer, Instance>> getData() {
-		return childData;
-	}
-
-	public void setData(Integer key, Instance value) {
-		HashMap<Integer, Instance> data1 = new HashMap<Integer, Instance>();
-		data1.put(key, value);
-		this.childData.add(data1);
 	}
 	
 	public int[] getValues() {
@@ -72,5 +64,13 @@ public class Node {
 	
 	public void removeClassifyData(Instance i) {
 		ownData.remove(i);
+	}
+
+	public Node getRight() {
+		return right;
+	}
+
+	public Node getLeft() {
+		return left;
 	}
 }
