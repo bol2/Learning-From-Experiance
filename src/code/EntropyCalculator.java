@@ -1,6 +1,7 @@
 package code;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * CS39440 Major Project: Learning From Experience EntropyCalculator.java
@@ -22,8 +23,6 @@ public class EntropyCalculator {
 	}
 
 	public void calculateEntropy(ArrayList<Instance> instances) {
-
-
 		int republican = 0;
 		int democrat = 0;
 
@@ -43,8 +42,6 @@ public class EntropyCalculator {
 	}
 
 	public int calculateHighestGain(ArrayList<Instance> remaining, ArrayList<Attribute> attributesRemaining) {
-
-		int value = 0;
 
 		ArrayList<Double> doubles = new ArrayList<Double>();
 		ArrayList<Attribute> addedAttributes = new ArrayList<Attribute>();
@@ -68,11 +65,10 @@ public class EntropyCalculator {
 			}
 		}
 
-		
 		return position;
 	}
-	
-	public double calculateInformationGain(ArrayList<Instance> remaining, int attribute){
+
+	public double calculateInformationGain(ArrayList<Instance> remaining, int attribute) {
 		double gain = 0;
 
 		int republicanAndYes = 0;
@@ -82,7 +78,6 @@ public class EntropyCalculator {
 		int democratAndYes = 0;
 		int democratAndNo = 0;
 		double democratAppearances = 0;
-		
 
 		for (int i = 0; i < remaining.size(); i++) {
 			int thisClassification = remaining.get(i).getClassification();
@@ -118,9 +113,91 @@ public class EntropyCalculator {
 			noGain += -democratAndNo / democratAppearances
 					* (Math.log(democratAndNo / democratAppearances) / Math.log(2));
 
-		gain = entropy
-				- (republicanAppearances / remaining.size() * yesGain + democratAppearances / remaining.size() * noGain);
+		gain = entropy - (republicanAppearances / remaining.size() * yesGain
+				+ democratAppearances / remaining.size() * noGain);
 		return gain;
-		
+
 	}
+
+	/**
+	 * A second, more complex procedure is to assign a probability to each of
+	 * the possible values of A rather than simply assigning the most common
+	 * value to A(x). These probabilities can be estimated again based on the
+	 * observed frequencies of the various values for A among the examples at
+	 * node n. For example, given a boolean attribute A, if node n contains six
+	 * known examples with A = 1 and four with A = 0, then we would say the
+	 * probability that A(x) = 1 is 0.6, and the probability that A(x) = 0 is
+	 * 0.4. A fractional 0.6 of instance x is now distributed down the branch
+	 * for A = 1, and a fractional 0.4 of x down the other tree branch. These
+	 * fractional examples are used for the purpose of computing information
+	 * Gain and can be further subdivided at subsequent branches of the tree if
+	 * a second missing attribute value must be tested. This same fractioning of
+	 * examples can also be applied after learning, to classify new instances
+	 * whose attribute values are unknown. In this case, the classification of
+	 * the new instance is simply the most probable classification, computed by
+	 * summing the weights of the instance fragments classified in different
+	 * ways at the leaf nodes of the tree. This method for handling missing
+	 * attribute values is used in C4.5 (Quinlan 1993).
+	 * 
+	 * @param attribute
+	 **/
+
+	public void checkAndAssignValue(ArrayList<Instance> instances, Attribute attribute) {
+
+		// for every attribute
+
+		ag = new AttributeGetter(attribute);
+		int attributeNumer = ag.getAttribute();
+
+		double missingValue = 0;
+		double numberOfYes = 0;
+		double numberOfNo = 0;
+
+		for (Instance i : instances) {
+			int value = i.getAttributeValue(attributeNumer);
+			if (value == 3) {
+				missingValue++;
+			} else if (value == 1) {
+				numberOfYes++;
+			} else if (value == 2) {
+				numberOfNo++;
+			}
+		}
+
+		if (missingValue == 0)
+			return;
+
+		Random r = new Random();
+
+		// Should it be
+
+		double percentageYes = numberOfYes / (instances.size() - missingValue);
+		double percentageNo = numberOfNo / (instances.size() - missingValue);
+
+		for (Instance i : instances) {
+			double chanceYes = r.nextDouble();
+
+			if (i.getAttributeValue(attributeNumer) == 3) {
+				System.out.println(i.toString());
+				if (chanceYes <= percentageYes) {
+					i.setAttributeValue(attributeNumer+1, 1);
+				} else {
+					i.setAttributeValue(attributeNumer+1, 2);
+				}
+				
+				System.out.println(i.toString());
+			}
+
+		}
+
+	}
+
+	public double getEntropy() {
+		return entropy;
+	}
+
+	public void setEntropy(double entropy) {
+		this.entropy = entropy;
+	}
+
 }

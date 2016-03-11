@@ -34,7 +34,7 @@ public class TreeBuilder {
 		for (Attribute attribute : Attribute.values()) {
 			attributesRemaining.add(attribute);
 		}
-
+		ec = new EntropyCalculator();
 		MasterID3(remaining, attributesRemaining);
 	}
 
@@ -58,11 +58,10 @@ public class TreeBuilder {
 			root.setOwnData(remaining);
 			return;
 		}
+		
+		
 
 		ID3(remaining, attributesRemaining, root);
-
-		printPreety(root);
-		// print(root,0);
 
 		System.out.println();
 		System.out.println();
@@ -75,10 +74,14 @@ public class TreeBuilder {
 	public void ID3(ArrayList<Instance> remaining, ArrayList<Attribute> attributesRemaining, Node perant) {
 
 		// calculate the entropy and the highest gain
-		ec = new EntropyCalculator();
+	
+		
+		
+		ec.setEntropy(0);
 		ec.calculateEntropy(remaining);
 		int attribute = ec.calculateHighestGain(remaining, attributesRemaining);
 		System.out.println("Attribute with highest Gain = " + attributesRemaining.get(attribute).toString());
+		ec.checkAndAssignValue(remaining, attributesRemaining.get(attribute));
 
 		// set root as highest gain and get the values for the node. Create
 		// branches for the values
@@ -162,101 +165,39 @@ public class TreeBuilder {
 		return first;
 	}
 
-	public void printPreety(Node head) {
-
-		List<Node> list = new ArrayList<Node>();
-		list.add(head);
-		printTree(list, 16);
-	}
-
-	public int getHeight(Node head, int height) {
-
-		if (head == null) {
-			return 0;
-		} else {
-			int toReturn = 0;
-			if (head.getAttribute() != 16) {
-
-				for (Node n : head.getChildren()) {
-					height++;
-					if (getHeight(n, height) > toReturn) {
-						toReturn = height;
-					}
-				}
-
-			}
-			return 1 + toReturn;
-		}
-	}
-
-	/**
-	 * pass head node in list and height of the tree
-	 * 
-	 * @param levelNodes
-	 * @param level
-	 */
-	private void printTree(List<Node> levelNodes, int level) {
-
-		List<Node> nodes = new ArrayList<Node>();
-
-		// indentation for first node in given level
-		printIndentForLevel(level);
-
-		for (Node treeNode : levelNodes) {
-
-			// print node data
-			System.out.print(treeNode == null ? " " : treeNode.getAttribute());
-
-			// spacing between nodes
-			printSpacingBetweenNodes(level);
-
-			// if its not a leaf node
-			if (level > 1) {
-				for (Node n : treeNode.getChildren()) {
-					nodes.add(n);
-				}
-				// nodes.add(treeNode == null? null:treeNode.left);
-				// nodes.add(treeNode == null? null:treeNode.right);
-			}
-		}
-		System.out.println();
-
-		if (level > 1) {
-			printTree(nodes, level - 1);
-		}
-	}
-
-	private void printIndentForLevel(int level) {
-		for (int i = (int) (Math.pow(2, level - 1)); i > 0; i--) {
-			System.out.print(" ");
-		}
-	}
-
-	private void printSpacingBetweenNodes(int level) {
-		// spacing between nodes
-		for (int i = (int) ((Math.pow(2, level - 1)) * 2) - 1; i > 0; i--) {
-			System.out.print(" ");
-		}
-	}
-
-	public static void printTree(Node root, int level) {
+	public void printTree(Node root, int level) {
 		if (root == null)
 			return;
 
 		printTree(root.getRight(), level + 1);
+		int republicans = getNumberOfVotes(root.getOwnData(), 1);
+		int democrats = getNumberOfVotes(root.getOwnData(), 2);
+		attgetter = new AttributeGetter(root.getAttribute());
 		if (level != 0) {
 			for (int i = 0; i < level - 1; i++)
 				System.out.print("|\t");
-			// attgetter = new AttributeGetter(root.getAttribute());
-			// System.out.println("/-------"+attgetter.getAttributeString() + ",
-			// " +root.getOwnData().size() );
-			System.out.println("/-------" + root.getAttribute() + ", " + root.getOwnData().size() + "");
+			
+			System.out.println("/-------" + attgetter.getAttributeString());
 			for (int i = 0; i < level - 1; i++)
 				System.out.print("|\t");
-				System.out.println("|        hey");
+			System.out.println("|       " + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]");
+			for (int i = 0; i < level - 1; i++)
+				System.out.print("|\t");
+			System.out.println("|");
 		} else
-			System.out.println(root.getAttribute());
+			System.out.println(attgetter.getAttributeString() + "\n" + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]");
 		printTree(root.getLeft(), level + 1);
+	}
+
+	public int getNumberOfVotes(ArrayList<Instance> data, int classification) {
+		int votes = 0;
+
+		for (Instance i : data) {
+			if (i.getClassification() == classification)
+				votes++;
+		}
+		return votes;
+
 	}
 
 }
