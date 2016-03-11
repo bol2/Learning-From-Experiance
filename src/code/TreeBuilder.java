@@ -65,7 +65,7 @@ public class TreeBuilder {
 
 		System.out.println();
 		System.out.println();
-		printTree(root, 0);
+		printTree(root, 0, "/-------");
 		// printTree2(root, 0);
 		first = root;
 
@@ -165,11 +165,11 @@ public class TreeBuilder {
 		return first;
 	}
 
-	public void printTree(Node root, int level) {
+	public void printTree(Node root, int level, String line) {
 		if (root == null)
 			return;
 
-		printTree(root.getRight(), level + 1);
+		printTree(root.getRight(), level + 1, "/-------");
 		int republicans = getNumberOfVotes(root.getOwnData(), 1);
 		int democrats = getNumberOfVotes(root.getOwnData(), 2);
 		attgetter = new AttributeGetter(root.getAttribute());
@@ -177,16 +177,16 @@ public class TreeBuilder {
 			for (int i = 0; i < level - 1; i++)
 				System.out.print("|\t");
 			
-			System.out.println("/-------" + attgetter.getAttributeString());
+			System.out.println(line + attgetter.getAttributeString());
 			for (int i = 0; i < level - 1; i++)
 				System.out.print("|\t");
 			System.out.println("|       " + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]");
-			for (int i = 0; i < level - 1; i++)
+			/*for (int i = 0; i < level - 1; i++)
 				System.out.print("|\t");
-			System.out.println("|");
+			System.out.println("|");*/
 		} else
 			System.out.println(attgetter.getAttributeString() + "\n" + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]");
-		printTree(root.getLeft(), level + 1);
+		printTree(root.getLeft(), level + 1, "\\-------");
 	}
 
 	public int getNumberOfVotes(ArrayList<Instance> data, int classification) {
