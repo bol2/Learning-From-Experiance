@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -114,6 +115,7 @@ public class TreeBuilder {
 				Node child = new Node();
 				child.setOwnData(temp);
 				child.setAttribute(16);
+				assignLabel(child, temp);
 				root.setChildren(child, i);
 			}
 
@@ -144,6 +146,7 @@ public class TreeBuilder {
 					ID3(temp, tempAttributesRemaining, child);
 				} else {
 					child.setAttribute(16);
+					assignLabel(child, temp);
 					root.setChildren(child, i);
 				}
 			}
@@ -206,6 +209,34 @@ public class TreeBuilder {
 		}
 		return votes;
 
+	}
+	
+	public void assignLabel(Node leafNode, ArrayList<Instance> leafData){
+		int numberOfRepublicans = 0;
+		int numberOfDemocrats = 0;
+		
+		for (Instance instance : leafData){
+			if (instance.getClassification() == 1){
+				numberOfRepublicans ++;
+			}else if (instance.getClassification() == 2 ){
+				numberOfDemocrats ++;
+			}
+		}
+		
+		if (numberOfRepublicans == numberOfDemocrats){
+			Random rn = new Random();
+			double randomValue = rn.nextDouble();
+			if (randomValue < 0.5){
+				leafNode.setLabel("Republican");
+			}else {
+				leafNode.setLabel("Democrat");
+			}
+		}else if (numberOfRepublicans > numberOfDemocrats){
+			leafNode.setLabel("Republican");
+		}else if (numberOfDemocrats > numberOfRepublicans){
+			leafNode.setLabel("Democrat");
+		}
+		
 	}
 
 }

@@ -17,7 +17,10 @@ public class Node {
 	private ArrayList<Integer> branchValues;
 	private int attribute;
 	private ArrayList<Node> children;
+
 	private ArrayList<Instance> ownData;
+	private String label;
+	
 	
 	public Node(){
 		branchValues = new ArrayList<Integer>();
@@ -100,5 +103,13 @@ public class Node {
 	 */
 	public void removeClassifyData(Instance i) {
 		ownData.remove(i);
+	}
+	
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 }

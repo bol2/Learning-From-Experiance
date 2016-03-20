@@ -14,6 +14,7 @@ public class Classifier {
 
 	private FileReader fr;
 	private TreeBuilder tb;
+	private double incorrectlyClassified;
 
 	public static void main(String[] args) {
 		Classifier c = new Classifier();
@@ -23,9 +24,13 @@ public class Classifier {
 		fr = new FileReader();
 		fr.readFile2("src/voteData.txt");
 		tb = new TreeBuilder(fr);
-		
+		incorrectlyClassified = 0;
 		classify(fr.getClassificationInput());
 		tb.printTree(tb.getRoot(), 0, "/-------");
+		
+		double correctClassified = (100 - ((incorrectlyClassified/fr.getClassificationInput().size()) * 100));
+		System.out.println("Amount of classified data incorrectly placed " + incorrectlyClassified + ". Amount Classified " + fr.getClassificationInput().size() +
+				". Percentage correctly classified = " + correctClassified);
 	}
 
 	/**
@@ -36,9 +41,6 @@ public class Classifier {
 	 */
 	private void classify(ArrayList<Instance> testData) {
 		System.out.println();
-		for (Instance i : testData) {
-			System.out.println(i.toString());
-		}
 
 		for (Instance i : testData) {
 			Node n = tb.getRoot();
@@ -94,6 +96,16 @@ public class Classifier {
 					child.setClassifiedData(i);
 
 					if (child.getAttribute() == 16) {
+						String label = child.getLabel();
+						int integerRepresentationOfLabel = 2;
+						
+						if (label.equals("Republican")){
+							integerRepresentationOfLabel = 1;
+						}
+						
+						
+						if (i.getClassification() != integerRepresentationOfLabel) incorrectlyClassified++;
+						
 						return;
 					} else {
 						sortNode(child, i);
