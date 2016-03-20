@@ -13,26 +13,38 @@ import java.util.Scanner;
  * read data set in from a file and create new instances from the data
  * 
  * @author Ben Larking
- * @version 1.5 29/02/16
+ * @version 1.6 14/03/16
  */
 
 public class FileReader {
 
-	private String file;
-	private ArrayList<Instance> input;
+	private String trainingFile;
+	private String classificationFile;
+	private ArrayList<Instance> trainingData;
+	private ArrayList<Instance> classificationData;
 
 	public FileReader() {
-		input = new ArrayList<Instance>();
-		readFile();
+		trainingData = new ArrayList<Instance>();
+		classificationData = new ArrayList<Instance>();
+		trainingFile = "src/voteData.txt";
+		classificationFile = "src/ClassificationData.txt";
+		readFile(trainingFile, trainingData);
+		readFile(classificationFile, classificationData);
+		
+		
 	}
 
-	public void readFile() {
+	/**
+	 * Reads a given file and assigns to a given array list. Used to read in the training and classification data.
+	 * @param fileString
+	 * @param data
+	 */
+	public void readFile(String fileString, ArrayList<Instance> data) {
 
-		file = "src/voteData.txt";
 
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new java.io.FileReader(file));
+			br = new BufferedReader(new java.io.FileReader(fileString));
 
 			String line = null;
 
@@ -55,7 +67,7 @@ public class FileReader {
 					}
 					attribute ++;
 				}
-				input.add(i);
+				data.add(i);
 				//System.out.println(i.toString());
 			}
 		} catch (FileNotFoundException e) {
@@ -66,7 +78,11 @@ public class FileReader {
 		}
 	}
 
-	public ArrayList<Instance> getInput() {
-		return input;
+	public ArrayList<Instance> getTrainingInput() {
+		return trainingData;
+	}
+	
+	public ArrayList<Instance> getClassificationInput() {
+		return classificationData;
 	}
 }

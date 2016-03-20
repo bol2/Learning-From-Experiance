@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Purpose: A class that can link integer numbers to attributes and return an array of integers for attribute values 	
  * 
  * @author Ben Larking
- * @version 1.4 22/02/16
+ * @version 1.6 14/03/16
  */
 
 public class AttributeGetter {
@@ -23,6 +23,10 @@ public class AttributeGetter {
 		this.id = id;
 	}
 
+	/**
+	 * 
+	 * @return an integer value for each attribute
+	 */
 	public int getAttribute() {
 		switch (A) {
 		case handicapped_infants:
@@ -64,6 +68,10 @@ public class AttributeGetter {
 		}
 	}
 
+	/**
+	 * 
+	 * @return a string representing each attribute given an integer
+	 */
 	public String getAttributeString() {
 		switch (id) {
 		case 0:
@@ -101,6 +109,51 @@ public class AttributeGetter {
 
 		default:
 			return "Leaf";
+		}
+	}
+	
+	/**
+	 * 
+	 * @return given an integer value this method will return the corresponding attribute.
+	 */
+	public Attribute getAttributefromValue() {
+		switch (id) {
+		case 0:
+			return Attribute.handicapped_infants;
+		case 1:
+			return Attribute.water_project_cost_sharing;
+		case 2:
+			return Attribute.adoption_of_the_budget_resolution;
+		case 3:
+			return Attribute.physician_fee_freeze;
+		case 4:
+			return Attribute.el_salvador_aid;
+		case 5:
+			return Attribute.religious_groups_in_schools;
+		case 6:
+			return Attribute.anti_satellite_test_ban;
+		case 7:
+			return Attribute.aid_to_nicaraguan_contras;
+		case 8:
+			return Attribute.mx_missile;
+		case 9:
+			return Attribute.immigration;
+		case 10:
+			return Attribute.synfuels_corporation_cutback;
+		case 11:
+			return Attribute.education_spending;
+		case 12:
+			return Attribute.superfund_right_to_sue;
+		case 13:
+			return Attribute.crime;
+		case 14:
+			return Attribute.duty_free_exports;
+		case 15:
+			return Attribute.export_administration_act_south_africa;
+
+		default:
+			Attribute leaf = null;
+			return leaf;
 		}
 	}
 }

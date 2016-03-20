@@ -28,7 +28,7 @@ public class TreeBuilder {
 	public TreeBuilder() {
 
 		fr = new FileReader();
-		remaining = fr.getInput();
+		remaining = fr.getTrainingInput();
 
 		attributesRemaining = new ArrayList<Attribute>();
 		for (Attribute attribute : Attribute.values()) {
@@ -89,30 +89,32 @@ public class TreeBuilder {
 		root.setOwnData(remaining);
 		AttributeGetter ag = new AttributeGetter(attributesRemaining.get(attribute));
 		root.setAttribute(ag.getAttribute());
-		System.out.println("This is the values for root" + root.getValues().length);
 
+		for (Instance i : remaining){
+			int value = i.getAttributeValue(ag.getAttribute());
+			if (!root.getValues().contains(value)) root.setValues(value);
+		}
+		
+		System.out.println("This is the values for root" + root.getValues().size());
+		
 		// Create branches for values
-		for (int i = 0; i < root.getValues().length; i++) {
+		for (int i = 0; i < root.getValues().size(); i++) {
 
 			// Create a subset of values for each branch
 			ArrayList<Instance> temp = new ArrayList<Instance>();
 			for (int y = 0; y < remaining.size(); y++) {
 
-				if (remaining.get(y).getAttributeValue(ag.getAttribute()) == root.getValues()[i]) {
-					// System.out.println("Adding to temp on condition" +
-					// remaining.get(y).getAttributeValue(attribute)
-					// + " " + root.getValues()[i]);
+				if (remaining.get(y).getAttributeValue(ag.getAttribute()) == root.getValues().get(i)) {
 					temp.add(remaining.get(y));
 				}
 			}
-
 			// If all values in subset are the same create a leaf Node
 			if (temp.size() != 0 && allSameClassification(temp) == true) {
 				// if all the same pull out
 				Node child = new Node();
 				child.setOwnData(temp);
 				child.setAttribute(16);
-				root.setChildren(child);
+				root.setChildren(child, i);
 			}
 
 			// Add a subtree
@@ -130,7 +132,7 @@ public class TreeBuilder {
 
 				if (tempAttributesRemaining.size() != 0) {
 					// child.setAttribute(attribute);
-					root.setChildren(child);
+					root.setChildren(child, i);
 
 					System.out.println("This is the passed in one " + perant.getAttribute());
 					for (int o = 0; o < root.getChildren().size(); o++) {
@@ -140,10 +142,10 @@ public class TreeBuilder {
 					System.out.println("Created a child and assigned above to root.");
 
 					ID3(temp, tempAttributesRemaining, child);
-				} else {
+				} /*else {
 					child.setAttribute(16);
-					root.setChildren(child);
-				}
+					root.setChildren(child, i);
+				}*/
 			}
 		}
 	}
@@ -151,9 +153,8 @@ public class TreeBuilder {
 	public boolean allSameClassification(ArrayList<Instance> remaining) {
 		// Test if all examples are the same, if so return single node tree
 		boolean allSame = true;
-
 		Instance testInstance = remaining.get(0);
-
+		
 		for (int i = 0; i < remaining.size(); i++) {
 			if (remaining.get(i).getClassification() != testInstance.getClassification())
 				allSame = false;
@@ -169,7 +170,12 @@ public class TreeBuilder {
 		if (root == null)
 			return;
 
-		printTree(root.getRight(), level + 1, "/-------");
+		try{
+			printTree(root.getChildren().get(1), level + 1, "/-------");
+		}
+		catch (Exception e){
+			
+		}
 		int republicans = getNumberOfVotes(root.getOwnData(), 1);
 		int democrats = getNumberOfVotes(root.getOwnData(), 2);
 		attgetter = new AttributeGetter(root.getAttribute());
@@ -181,12 +187,14 @@ public class TreeBuilder {
 			for (int i = 0; i < level - 1; i++)
 				System.out.print("|\t");
 			System.out.println("|       " + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]");
-			/*for (int i = 0; i < level - 1; i++)
-				System.out.print("|\t");
-			System.out.println("|");*/
 		} else
 			System.out.println(attgetter.getAttributeString() + "\n" + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]");
-		printTree(root.getLeft(), level + 1, "\\-------");
+		try{
+			printTree(root.getChildren().get(0), level + 1, "\\-------");
+		}catch (Exception e){
+			
+		}
+		
 	}
 
 	public int getNumberOfVotes(ArrayList<Instance> data, int classification) {

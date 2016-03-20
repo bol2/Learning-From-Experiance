@@ -9,7 +9,7 @@ import java.util.Random;
  * attributes given a data set.
  * 
  * @author Ben Larking
- * @version 1.4 22/02/16
+ * @version 1.6 14/03/16
  */
 
 public class EntropyCalculator {
@@ -22,6 +22,10 @@ public class EntropyCalculator {
 		this.entropy = 0;
 	}
 
+	/**
+	 * Calculates the entropy for the remaining instances in the data being used to build the tree
+	 * @param instances
+	 */
 	public void calculateEntropy(ArrayList<Instance> instances) {
 		int republican = 0;
 		int democrat = 0;
@@ -41,6 +45,7 @@ public class EntropyCalculator {
 			entropy += -democrat / dataSetSize * (Math.log(democrat / dataSetSize) / Math.log(2));
 	}
 
+	
 	public int calculateHighestGain(ArrayList<Instance> remaining, ArrayList<Attribute> attributesRemaining) {
 
 		ArrayList<Double> doubles = new ArrayList<Double>();
@@ -49,6 +54,7 @@ public class EntropyCalculator {
 		for (Attribute attribute : attributesRemaining) {
 			ag = new AttributeGetter(attribute);
 			int attributeNumer = ag.getAttribute();
+			//checkAndAssignValue(remaining, attribute);
 			doubles.add(calculateInformationGain(remaining, attributeNumer));
 			addedAttributes.add(attribute);
 			System.out.println("Added to added Attributes " + calculateInformationGain(remaining, attributeNumer));

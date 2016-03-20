@@ -8,7 +8,7 @@ import java.util.Properties;
  * Represents a single instance from the data set with named attributes
  * 
  * @author Ben Larking
- * @version 2.0 04/03/16
+ * @version 1.6 14/03/16
  */
 
 public class Instance {
@@ -196,6 +196,11 @@ public class Instance {
 		this.classification = classification;
 	}
 
+	/**
+	 * Calls a method to return the value of a given attribute
+	 * @param i integer representing attribute
+	 * @return integer representing if the vote is democrat, republican or ?
+	 */
 	public int getAttributeValue(int i) {
 		if (i == 0)
 			return this.getHandicapped_infants();
@@ -233,6 +238,11 @@ public class Instance {
 		return 16;
 	}
 
+	/**
+	 * Given an integer representing an attribute this method sets the value.
+	 * @param i integer representing the attribute
+	 * @param value is the value to be assigned to an attribute
+	 */
 	public void setAttributeValue(int i, int value) {
 		if (i == 0)
 			this.setClassification(value);
@@ -270,6 +280,9 @@ public class Instance {
 			this.setExport_administration_act_south_africa(value);
 	}
 
+	/**
+	 * Returns a toString for the instance.
+	 */
 	public String toString() {
 		StringBuffer result = new StringBuffer();
 
