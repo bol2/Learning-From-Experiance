@@ -20,8 +20,10 @@ public class Classifier {
 	}
 
 	public Classifier() {
-		tb = new TreeBuilder();
 		fr = new FileReader();
+		fr.readFile2("src/voteData.txt");
+		tb = new TreeBuilder(fr);
+		
 		classify(fr.getClassificationInput());
 		tb.printTree(tb.getRoot(), 0, "/-------");
 	}

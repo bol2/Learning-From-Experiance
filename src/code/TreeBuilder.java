@@ -25,9 +25,9 @@ public class TreeBuilder {
 	private Node first;
 	private static AttributeGetter attgetter;
 
-	public TreeBuilder() {
+	public TreeBuilder(FileReader fr2) {
 
-		fr = new FileReader();
+		fr = fr2;
 		remaining = fr.getTrainingInput();
 
 		attributesRemaining = new ArrayList<Attribute>();
@@ -109,7 +109,7 @@ public class TreeBuilder {
 				}
 			}
 			// If all values in subset are the same create a leaf Node
-			if (temp.size() != 0 && allSameClassification(temp) == true) {
+			if (temp.size() > 0 && allSameClassification(temp) == true) {
 				// if all the same pull out
 				Node child = new Node();
 				child.setOwnData(temp);
@@ -118,7 +118,7 @@ public class TreeBuilder {
 			}
 
 			// Add a subtree
-			else if (temp.size() != 0 && allSameClassification(temp) == false) {
+			else if (temp.size() > 0 && allSameClassification(temp) == false) {
 
 				// Remove an attribute
 				ArrayList<Attribute> tempAttributesRemaining = new ArrayList<Attribute>(attributesRemaining);
@@ -142,10 +142,10 @@ public class TreeBuilder {
 					System.out.println("Created a child and assigned above to root.");
 
 					ID3(temp, tempAttributesRemaining, child);
-				} /*else {
+				} else {
 					child.setAttribute(16);
 					root.setChildren(child, i);
-				}*/
+				}
 			}
 		}
 	}

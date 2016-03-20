@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -19,7 +20,6 @@ import java.util.Scanner;
 public class FileReader {
 
 	private String trainingFile;
-	private String classificationFile;
 	private ArrayList<Instance> trainingData;
 	private ArrayList<Instance> classificationData;
 
@@ -27,34 +27,33 @@ public class FileReader {
 		trainingData = new ArrayList<Instance>();
 		classificationData = new ArrayList<Instance>();
 		trainingFile = "src/voteData.txt";
-		classificationFile = "src/ClassificationData.txt";
-		readFile(trainingFile, trainingData);
-		readFile(classificationFile, classificationData);
-		
-		
+		//readFile2(trainingFile);
+
 	}
 
 	/**
-	 * Reads a given file and assigns to a given array list. Used to read in the training and classification data.
+	 * Reads a given file and assigns to a given array list. Used to read in the
+	 * training and classification data.
+	 * 
 	 * @param fileString
 	 * @param data
 	 */
-	public void readFile(String fileString, ArrayList<Instance> data) {
-
+	public void readFile2(String fileString) {
 
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new java.io.FileReader(fileString));
 
 			String line = null;
-
+			Random rn = new Random();
+			
 			while ((line = br.readLine()) != null) {
 				Instance i = new Instance();
 				String[] split = line.split(",");
 				int attribute = 0;
 				for (String bit : split) {
 					if (bit.equals("republican")) {
-						
+
 						i.setAttributeValue(attribute, 1);
 					} else if (bit.equals("democrat")) {
 						i.setAttributeValue(attribute, 2);
@@ -65,10 +64,17 @@ public class FileReader {
 					} else if (bit.equals("?")) {
 						i.setAttributeValue(attribute, 3);
 					}
-					attribute ++;
+					attribute++;
 				}
-				data.add(i);
-				//System.out.println(i.toString());
+				
+				double randomValue = rn.nextDouble();
+				double percentTraining = 0.6;
+
+				if (randomValue <= percentTraining) {
+					trainingData.add(i);
+				} else if (randomValue > percentTraining) {
+					classificationData.add(i);
+				} 
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -81,7 +87,7 @@ public class FileReader {
 	public ArrayList<Instance> getTrainingInput() {
 		return trainingData;
 	}
-	
+
 	public ArrayList<Instance> getClassificationInput() {
 		return classificationData;
 	}
