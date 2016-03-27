@@ -57,7 +57,6 @@ public class EntropyCalculator {
 			//checkAndAssignValue(remaining, attribute);
 			doubles.add(calculateInformationGain(remaining, attributeNumer));
 			addedAttributes.add(attribute);
-			System.out.println("Added to added Attributes " + calculateInformationGain(remaining, attributeNumer));
 		}
 
 		double max = -99999;
@@ -184,14 +183,11 @@ public class EntropyCalculator {
 			double chanceYes = r.nextDouble();
 
 			if (i.getAttributeValue(attributeNumer) == 3) {
-				System.out.println(i.toString());
 				if (chanceYes <= percentageYes) {
 					i.setAttributeValue(attributeNumer+1, 1);
 				} else {
 					i.setAttributeValue(attributeNumer+1, 2);
 				}
-				
-				System.out.println(i.toString());
 			}
 
 		}

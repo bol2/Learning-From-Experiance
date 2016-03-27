@@ -53,35 +53,25 @@ public class TreeBuilder {
 
 		// Create the one leaf node tree.
 		if (allSame == true) {
-			System.out.println(
-					"All Classifications are the same. The tree is a single node tree with the following label "
-							+ testInstance.getClassification());
 			root.setOwnData(remaining);
 			return;
 		}
-		
-		
 
 		ID3(remaining, attributesRemaining, root);
+		first = root;
 
 		System.out.println();
-		System.out.println();
 		printTree(root, 0, "/-------");
-		// printTree2(root, 0);
-		first = root;
 
 	}
 
 	public void ID3(ArrayList<Instance> remaining, ArrayList<Attribute> attributesRemaining, Node perant) {
 
 		// calculate the entropy and the highest gain
-	
-		
-		
+
 		ec.setEntropy(0);
 		ec.calculateEntropy(remaining);
 		int attribute = ec.calculateHighestGain(remaining, attributesRemaining);
-		System.out.println("Attribute with highest Gain = " + attributesRemaining.get(attribute).toString());
 		ec.checkAndAssignValue(remaining, attributesRemaining.get(attribute));
 
 		// set root as highest gain and get the values for the node. Create
@@ -91,13 +81,12 @@ public class TreeBuilder {
 		AttributeGetter ag = new AttributeGetter(attributesRemaining.get(attribute));
 		root.setAttribute(ag.getAttribute());
 
-		for (Instance i : remaining){
+		for (Instance i : remaining) {
 			int value = i.getAttributeValue(ag.getAttribute());
-			if (!root.getValues().contains(value)) root.setValues(value);
+			if (!root.getValues().contains(value))
+				root.setValues(value);
 		}
-		
-		System.out.println("This is the values for root" + root.getValues().size());
-		
+
 		// Create branches for values
 		for (int i = 0; i < root.getValues().size(); i++) {
 
@@ -116,7 +105,7 @@ public class TreeBuilder {
 				child.setOwnData(temp);
 				child.setAttribute(16);
 				assignLabel(child, temp);
-				root.setChildren(child, i);
+				root.setChildren(child);
 			}
 
 			// Add a subtree
@@ -134,20 +123,13 @@ public class TreeBuilder {
 
 				if (tempAttributesRemaining.size() != 0) {
 					// child.setAttribute(attribute);
-					root.setChildren(child, i);
-
-					System.out.println("This is the passed in one " + perant.getAttribute());
-					for (int o = 0; o < root.getChildren().size(); o++) {
-						System.out.println("Set for the new root" + root.getChildren().get(o).getOwnData());
-					}
-
-					System.out.println("Created a child and assigned above to root.");
+					root.setChildren(child);
 
 					ID3(temp, tempAttributesRemaining, child);
 				} else {
 					child.setAttribute(16);
 					assignLabel(child, temp);
-					root.setChildren(child, i);
+					root.setChildren(child);
 				}
 			}
 		}
@@ -157,7 +139,7 @@ public class TreeBuilder {
 		// Test if all examples are the same, if so return single node tree
 		boolean allSame = true;
 		Instance testInstance = remaining.get(0);
-		
+
 		for (int i = 0; i < remaining.size(); i++) {
 			if (remaining.get(i).getClassification() != testInstance.getClassification())
 				allSame = false;
@@ -173,11 +155,10 @@ public class TreeBuilder {
 		if (root == null)
 			return;
 
-		try{
+		try {
 			printTree(root.getChildren().get(1), level + 1, "/-------");
-		}
-		catch (Exception e){
-			
+		} catch (Exception e) {
+
 		}
 		int republicans = getNumberOfVotes(root.getOwnData(), 1);
 		int democrats = getNumberOfVotes(root.getOwnData(), 2);
@@ -185,19 +166,20 @@ public class TreeBuilder {
 		if (level != 0) {
 			for (int i = 0; i < level - 1; i++)
 				System.out.print("|\t");
-			
+
 			System.out.println(line + attgetter.getAttributeString());
 			for (int i = 0; i < level - 1; i++)
 				System.out.print("|\t");
 			System.out.println("|       " + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]");
 		} else
-			System.out.println(attgetter.getAttributeString() + "\n" + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]");
-		try{
+			System.out.println(attgetter.getAttributeString() + "\n" + root.getOwnData().size() + " [" + republicans
+					+ "R, " + democrats + "D]");
+		try {
 			printTree(root.getChildren().get(0), level + 1, "\\-------");
-		}catch (Exception e){
-			
+		} catch (Exception e) {
+
 		}
-		
+
 	}
 
 	public int getNumberOfVotes(ArrayList<Instance> data, int classification) {
@@ -210,33 +192,33 @@ public class TreeBuilder {
 		return votes;
 
 	}
-	
-	public void assignLabel(Node leafNode, ArrayList<Instance> leafData){
+
+	public void assignLabel(Node leafNode, ArrayList<Instance> leafData) {
 		int numberOfRepublicans = 0;
 		int numberOfDemocrats = 0;
-		
-		for (Instance instance : leafData){
-			if (instance.getClassification() == 1){
-				numberOfRepublicans ++;
-			}else if (instance.getClassification() == 2 ){
-				numberOfDemocrats ++;
+
+		for (Instance instance : leafData) {
+			if (instance.getClassification() == 1) {
+				numberOfRepublicans++;
+			} else if (instance.getClassification() == 2) {
+				numberOfDemocrats++;
 			}
 		}
-		
-		if (numberOfRepublicans == numberOfDemocrats){
+
+		if (numberOfRepublicans == numberOfDemocrats) {
 			Random rn = new Random();
 			double randomValue = rn.nextDouble();
-			if (randomValue < 0.5){
+			if (randomValue < 0.5) {
 				leafNode.setLabel("Republican");
-			}else {
+			} else {
 				leafNode.setLabel("Democrat");
 			}
-		}else if (numberOfRepublicans > numberOfDemocrats){
+		} else if (numberOfRepublicans > numberOfDemocrats) {
 			leafNode.setLabel("Republican");
-		}else if (numberOfDemocrats > numberOfRepublicans){
+		} else if (numberOfDemocrats > numberOfRepublicans) {
 			leafNode.setLabel("Democrat");
 		}
-		
+
 	}
 
 }
