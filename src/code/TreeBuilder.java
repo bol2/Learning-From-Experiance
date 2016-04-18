@@ -20,7 +20,7 @@ import java.util.Scanner;
 public class TreeBuilder {
 
 	private EntropyCalculator ec;
-	private ArrayList<Instance> remaining = null;
+	private ArrayList<Instance> remaining = new ArrayList<>();
 	private ArrayList<Attribute> attributesRemaining = null;
 	private FileReader fr;
 	private Node first;
@@ -86,7 +86,7 @@ public class TreeBuilder {
 			if (!root.getValues().contains(value))
 				root.setValues(value);
 		}
-
+		assignLabel(root, remaining);
 		// Create branches for values
 		for (int i = 0; i < root.getValues().size(); i++) {
 
@@ -104,6 +104,7 @@ public class TreeBuilder {
 				Node child = new Node();
 				child.setOwnData(temp);
 				child.setAttribute(16);
+				child.setPerant(root);
 				assignLabel(child, temp);
 				root.setChildren(child);
 			}
@@ -120,11 +121,12 @@ public class TreeBuilder {
 				Node child = new Node();
 
 				child.setOwnData(temp);
+				child.setPerant(root);
 
 				if (tempAttributesRemaining.size() != 0) {
 					// child.setAttribute(attribute);
 					root.setChildren(child);
-
+					
 					ID3(temp, tempAttributesRemaining, child);
 				} else {
 					child.setAttribute(16);

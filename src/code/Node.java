@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @version 1.6 14/03/16
  */
 
-public class Node implements Cloneable {
+public class Node{
 
 	private ArrayList<Integer> branchValues;
 	private int attribute;
@@ -20,12 +20,14 @@ public class Node implements Cloneable {
 
 	private ArrayList<Instance> ownData;
 	private String label;
+	private Node perant;
 
 	public Node() {
 		this.branchValues = new ArrayList<Integer>();
 		this.children = new ArrayList<Node>();
 		this.ownData = new ArrayList<Instance>();
 		this.attribute = 16;
+		this.setPerant(null);
 	}
 
 	public Node cloneNode(Node n, Node treeToPrune) {
@@ -152,5 +154,13 @@ public class Node implements Cloneable {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public Node getPerant() {
+		return perant;
+	}
+
+	public void setPerant(Node perant) {
+		this.perant = perant;
 	}
 }

@@ -21,6 +21,7 @@ public class AttributeGetter {
 	
 	public AttributeGetter(int id) {
 		this.id = id;
+		this.A = getAttributefromValue();
 	}
 
 	/**
