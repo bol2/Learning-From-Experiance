@@ -61,7 +61,8 @@ public class TreeBuilder {
 		first = root;
 
 		System.out.println();
-		printTree(root, 0, "/-------");
+		//printTree(root, 0, "/-------");
+		printTree("", true, root, 0);
 
 	}
 
@@ -152,8 +153,28 @@ public class TreeBuilder {
 	public Node getRoot() {
 		return first;
 	}
+	
+	 public void printTree(String prefix, boolean isTail, Node root, int level) {
+		    attgetter = new AttributeGetter(root.getAttribute());
+		    int republicans = getNumberOfVotes(root.getOwnData(), 1);
+			int democrats = getNumberOfVotes(root.getOwnData(), 2);
+			
+			
+	        System.out.println(prefix + (isTail ? "└────" + attgetter.getAttributeString() + "\n" + prefix + "     " + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]": "├─────" + attgetter.getAttributeString() + "\n" + prefix + "|     " + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]"));
+			//System.out.println("       |" + root.getOwnData().size() + " [" + republicans + "R, " + democrats + "D]");
+		    
+	        for (int i = 0; i < root.getChildren().size() - 1; i++) {
+	        	level++;
+	            printTree(prefix + (isTail ? "        " : "│       "), false, root.getChildren().get(i), level);
+	        }
+	        
+	        if (root.getChildren().size() > 0) {
+	        	level++;
+	        	printTree(prefix + (isTail ?"        " : "│       "), true, root.getChildren().get(root.getChildren().size() - 1), level);
+	        }
+	    }
 
-	public void printTree(Node root, int level, String line) {
+	/*public void printTree(Node root, int level, String line) {
 		if (root == null)
 			return;
 
@@ -182,7 +203,7 @@ public class TreeBuilder {
 
 		}
 
-	}
+	}*/
 
 	public int getNumberOfVotes(ArrayList<Instance> data, int classification) {
 		int votes = 0;

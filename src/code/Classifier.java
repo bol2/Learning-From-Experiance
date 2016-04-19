@@ -38,31 +38,23 @@ public class Classifier {
 
 		incorrectlyClassified = 0;
 		classify(classificationData, originalRoot);
-		tb.printTree(originalRoot, 0, "/-------");
+		//tb.printTree(originalRoot, 0, "/-------");
+		tb.printTree("", true, originalRoot, 0);
 
 		correctClassifiedOriginal = (100 - ((incorrectlyClassified / classificationData.size()) * 100));
 		System.out.println("Amount of classified data incorrectly placed " + incorrectlyClassified
 				+ ". Amount Classified " + classificationData.size() + ". Percentage correctly classified = "
 				+ correctClassifiedOriginal);
 
-		//prune(originalRoot);
-		// cleanPath(originalRoot);
-		 prune2(originalRoot);
-		
-		  //for(Instance i : new ArrayList<>(originalRoot.getOwnData())){ if
-		  //(tempy.contains(i)){ originalRoot.removeClassifyData(i); } }
-		  
-		 //removeOriginal(originalRoot);
-		// cleanPath(originalRoot);
-
-		tb.printTree(originalRoot, 0, "/-------");
+		prune(originalRoot);
+		//tb.printTree(originalRoot, 0, "/-------");
+		tb.printTree("", true, originalRoot, 0);
 
 		System.out.println("Amount of classified data incorrectly placed " + lowestIncorrectlyClassified
 				+ ". Amount Classified " + classificationData.size() + ". Percentage correctly classified = "
 				+ correctClassifiedOriginal);
 
-		}
-
+	}
 
 	public void removeOriginal(Node n) {
 		for (Node child : new ArrayList<>(n.getChildren())) {
@@ -171,87 +163,56 @@ public class Classifier {
 	 **/
 
 	public void prune(Node node) {
+		//cleanPath(node);
 		prune2(node);
 		cleanPath(node);
 	}
 
-	/*public void prune2(Node node) {
-		// Loop backwards through the array list, pick last child first.
-		for (int x = new ArrayList<>(node.getChildren()).size() - 1; x >= 0; x--) {
-			Node child = node.getChildren().get(x);
-			// If we havent reached a child node yet then we go back to the algorithm and recall it.
-			if (child.getAttribute() != 16) {
-				prune2(child);
-			} else {
-				// Prune a temporary array? If the result is better prune the original. 
-				
-				// If there is more than one i'm placing the first in the array at the end! 
-				removeClassifiedData(originalRoot);
-				incorrectlyClassified = 0;
-				node.removeChildren(child);
-				int tempAttribute = node.getAttribute();
-				if (node.getChildren().size() == 0) {
-					node.setAttribute(16);
-				}
-				
-				classify(classificationData, originalRoot);
-				correctClassifiedNew = (100 - ((incorrectlyClassified / classificationData.size()) * 100));
-				if (correctClassifiedNew <= correctClassifiedOriginal) {
-					System.out.println("put the node back!" + correctClassifiedNew + ", " + correctClassifiedOriginal);
-					node.setChildren(child);
-					node.setAttribute(tempAttribute);
-				} else {
-					System.out.println("Removed a Node!");	
-					System.out.println("" + correctClassifiedNew + "vs " + correctClassifiedOriginal);
-					correctClassifiedOriginal = correctClassifiedNew;
-					lowestIncorrectlyClassified = incorrectlyClassified;
-
-				}
-			}
-		}
-	}*/
-	
 	public void prune2(Node node) {
-		
+
 		// check if all children
 		boolean allLeaf = true;
+
 		for (Node child : node.getChildren()) {
-		 if (child.getAttribute() != 16) allLeaf = false;
+			if (child.getAttribute() != 16)
+				allLeaf = false;
 		}
-		
-		if (allLeaf == false){
-			for (Node child : node.getChildren()){
+
+		if (allLeaf == false) {
+			for (Node child : node.getChildren()) {
 				prune2(child);
 			}
 		}
 		// if all nodes are children, prune the node and check classification
-		else{
+		else {
 			Node tempSave = new Node();
 			tempSave = node.cloneNode(node, tempSave);
-			
+
 			node.setAttribute(16);
-			for (Node child : new ArrayList<Node>(node.getChildren())){
+			for (Node child : new ArrayList<Node>(node.getChildren())) {
 				node.removeChildren(child);
 			}
-			
-			//remove classification data 
+
+			// remove classification data
 			removeClassifiedData(originalRoot);
+			double tempWrong = incorrectlyClassified;
 			incorrectlyClassified = 0;
-			
-			// re classify and compaire 
+
+			// re classify and compare
 			classify(classificationData, originalRoot);
 			correctClassifiedNew = (100 - ((incorrectlyClassified / classificationData.size()) * 100));
-			
-			if (correctClassifiedNew <= correctClassifiedOriginal) {
+
+			if (correctClassifiedNew < correctClassifiedOriginal) {
 				System.out.println("put the node back!" + correctClassifiedNew + ", " + correctClassifiedOriginal);
 				node = tempSave;
+				incorrectlyClassified = tempWrong;
 			} else {
-				System.out.println("Removed a Node!");	
+				System.out.println("Removed a Node!");
 				System.out.println("" + correctClassifiedNew + "vs " + correctClassifiedOriginal);
 				correctClassifiedOriginal = correctClassifiedNew;
 				lowestIncorrectlyClassified = incorrectlyClassified;
 			}
-			
+
 		}
 	}
 
@@ -294,7 +255,7 @@ public class Classifier {
 			integerRepresentationOfLabel = 1;
 		}
 
-		if (i.getClassification() != integerRepresentationOfLabel){
+		if (i.getClassification() != integerRepresentationOfLabel) {
 			incorrectlyClassified++;
 		}
 
