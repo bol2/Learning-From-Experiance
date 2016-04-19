@@ -1,86 +1,94 @@
 package code;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
- * CS39440 Major Project: Learning From Experience
- * FileReader.java
- * Purpose: To read data set in from a file and create new instances from the data
+ * CS39440 Major Project: Learning From Experience FileReader.java Purpose: To
+ * read data set in from a file and create new instances from the data
  * 
  * @author Ben Larking
- * @version 1.5 29/02/16
+ * @version 1.6 14/03/16
  */
 
 public class FileReader {
 
-	private String file;
-	private ArrayList<Instance> input;
-	private ArrayList<Instance> testData;
+	private String trainingFile;
+	private ArrayList<Instance> trainingData;
+	private ArrayList<Instance> classificationData;
 
 	public FileReader() {
-		input = new ArrayList<Instance>();
-		testData = new ArrayList<Instance>();
-		readFile();
+		trainingData = new ArrayList<Instance>();
+		classificationData = new ArrayList<Instance>();
+		trainingFile = "src/voteData.txt";
+		//readFile2(trainingFile);
+
 	}
 
-	public void readFile() {
-		
-		file = "src/LensData.txt";
+	/**
+	 * Reads a given file and assigns to a given array list. Used to read in the
+	 * training and classification data.
+	 * 
+	 * @param fileString
+	 * @param data
+	 */
+	public void readFile2(String fileString) {
 
+		BufferedReader br = null;
 		try {
-			Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(new FileInputStream(file))));
-			while (scanner.hasNext()) {
-				if (scanner.hasNextInt()) {
-					int id_key = scanner.nextInt();
-					int age = scanner.nextInt();
-					int preseription = scanner.nextInt();
-					int astigmatic = scanner.nextInt();
-					int tearProdRate = scanner.nextInt();
-					int classification = scanner.nextInt();
+			br = new BufferedReader(new java.io.FileReader(fileString));
 
-					Instance instance = new Instance(age, preseription, astigmatic, tearProdRate, classification, id_key);
-					input.add(instance);
+			String line = null;
+			Random rn = new Random();
+			
+			while ((line = br.readLine()) != null) {
+				Instance i = new Instance();
+				String[] split = line.split(",");
+				int attribute = 0;
+				for (String bit : split) {
+					if (bit.equals("republican")) {
+
+						i.setAttributeValue(attribute, 1);
+					} else if (bit.equals("democrat")) {
+						i.setAttributeValue(attribute, 2);
+					} else if (bit.equals("y")) {
+						i.setAttributeValue(attribute, 1);
+					} else if (bit.equals("n")) {
+						i.setAttributeValue(attribute, 2);
+					} else if (bit.equals("?")) {
+						i.setAttributeValue(attribute, 3);
+					}
+					attribute++;
 				}
+				
+				double randomValue = rn.nextDouble();
+				double percentTraining = 0.6;
+
+				if (randomValue <= percentTraining) {
+					trainingData.add(i);
+				} else if (randomValue > percentTraining) {
+					classificationData.add(i);
+				} 
 			}
-			scanner.close();
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		file = "src/ClassificationData.txt";
-		
-		try {
-			Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(new FileInputStream(file))));
-			while (scanner.hasNext()) {
-				if (scanner.hasNextInt()) {
-					int id_key = scanner.nextInt();
-					int age = scanner.nextInt();
-					int preseription = scanner.nextInt();
-					int astigmatic = scanner.nextInt();
-					int tearProdRate = scanner.nextInt();
-					int classification = scanner.nextInt();
-
-					Instance instance = new Instance(age, preseription, astigmatic, tearProdRate, classification, id_key);
-					testData.add(instance);
-				}
-			}
-			scanner.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
-	public ArrayList<Instance> getInput() {
-		return input;
+	public ArrayList<Instance> getTrainingInput() {
+		return trainingData;
 	}
-	
-	public ArrayList<Instance> getTestData() {
-		return testData;
+
+	public ArrayList<Instance> getClassificationInput() {
+		return classificationData;
 	}
 }

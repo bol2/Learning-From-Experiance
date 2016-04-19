@@ -1,4 +1,4 @@
-package Tests;
+package tests;
 import code.EntropyCalculator;
 
 import static org.junit.Assert.*;
