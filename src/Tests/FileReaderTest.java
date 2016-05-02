@@ -1,88 +1,100 @@
 package tests;
 
 import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import code.FileReader;
 import code.Instance;
 
 /**
- * @author benlarking
- *
+ * CS39440 Major Project: Learning From Experience FileReaderTest.java Purpose:
+ * A class to test the functionality of the methods belonging to FileReader.java
+ * 
+ * @author Ben Larking
+ * @version 2.0 29/04/16
  */
 public class FileReaderTest {
 
 	private String realFileName;
 	private String testFileName;
-	private FileReader fr;
-	
-	 @Rule public ExpectedException exception = ExpectedException.none();
-	
+	private FileReader fileReader;
+
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
+
 	/**
-	 * @throws java.lang.Exception
+	 * Define two files, one contains the real data, another contains data
+	 * designed to cause an exception to be thrown.
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		realFileName = "src/VoteData.txt";
 		testFileName = "src/VoteDataTest.txt";
-		fr = new FileReader();
+		fileReader = new FileReader();
 	}
 
 	/**
-	 * Test method for readFile. Test method will ensure the correct file exists.
-	 * @throws IOException 
+	 * Test that the correct file exists and that when it is read in, all 435
+	 * instances are read.
+	 * 
+	 * @throws IOException
 	 */
 	@Test
 	public void testReadFile() throws IOException {
 		File shouldExist = new File(realFileName);
-	    assertTrue(shouldExist.exists());
-	    
-	    fr.readFile(realFileName);
-	    int totalInstancesReadIn = fr.getTestInput().size() + fr.getTrainingInput().size();
-	    int totalInstancesExpected = 435;
-	    assertEquals(totalInstancesReadIn, totalInstancesExpected);
+		assertTrue(shouldExist.exists());
+
+		fileReader.readFile(realFileName);
+		int totalInstancesReadIn = fileReader.getTestInput().size() + fileReader.getTrainingInput().size();
+		int totalInstancesExpected = 435;
+		assertEquals(totalInstancesReadIn, totalInstancesExpected);
 	}
-	
+
 	/**
-	 * Test method for readFile. Test method will ensure the correct file exists.
-	 * @throws IOException 
+	 * Test that when the wrong file is read with an input format that is not
+	 * expected an exception is thrown.
+	 * 
+	 * @throws IOException
 	 */
 	@Test
-	public void testReadFileValues() throws IOException{
+	public void testReadFileValues() throws IOException {
 		exception.expect(IOException.class);
-		fr.readFile(testFileName);	
+		fileReader.readFile(testFileName);
 	}
-		
+
 	/**
-	 * Test method for readFile. Test method will ensure the correct file exists.
-	 * @throws IOException 
+	 * Test that the correct amount of democrat and republicans are read in from
+	 * the real data file.
+	 * 
+	 * @throws IOException
 	 */
 	@Test
-	public void testReadFileQuantity() throws IOException{
-		fr.readFile(realFileName);	
-		
+	public void testReadFileQuantity() throws IOException {
+		fileReader.readFile(realFileName);
+
 		int expectedDemocrats = 267;
 		int expectedRepublicans = 168;
 		int democratCounter = 0;
 		int republicanCounter = 0;
-		
-		for (Instance instance : fr.getTrainingInput()){
-			if (instance.getClassification() == 2) democratCounter++;
-			else if (instance.getClassification() == 1) republicanCounter++;
+
+		for (Instance instance : fileReader.getTrainingInput()) {
+			if (instance.getClassification() == 2)
+				democratCounter++;
+			else if (instance.getClassification() == 1)
+				republicanCounter++;
 		}
-		for (Instance instance : fr.getTestInput()){
-			if (instance.getClassification() == 2) democratCounter++;
-			else if (instance.getClassification() == 1) republicanCounter++;
+		for (Instance instance : fileReader.getTestInput()) {
+			if (instance.getClassification() == 2)
+				democratCounter++;
+			else if (instance.getClassification() == 1)
+				republicanCounter++;
 		}
-		
+
 		assertEquals(democratCounter, expectedDemocrats);
-		assertEquals(republicanCounter, expectedRepublicans);	
+		assertEquals(republicanCounter, expectedRepublicans);
 	}
 }

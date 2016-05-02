@@ -1,15 +1,23 @@
 package tests;
 
 import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import code.Instance;
+
+/**
+ * CS39440 Major Project: Learning From Experience InstanceTest.java Purpose:
+ * A class to test the functionality of the methods belonging to
+ * Instance.java
+ * 
+ * @author Ben Larking
+ * @version 2.0 29/04/16
+ */
 
 public class InstanceTest {
 
 	Instance instance;
+	
 	@Before
 	public void setUp() throws Exception {
 		instance = new Instance();
@@ -32,5 +40,4 @@ public class InstanceTest {
 		assertEquals(instance.getClassification(), 1);
 		assertEquals(instance.getExport_administration_act_south_africa(), 2);
 	}
-
 }
