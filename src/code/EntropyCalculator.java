@@ -9,35 +9,32 @@ import java.util.Random;
  * attributes given a data set.
  * 
  * @author Ben Larking
- * @version 1.6 14/03/16
+ * @version 2.0 29/04/16
  */
 
 public class EntropyCalculator {
-
-	private AttributeGetter ag;
-
-	double entropy;
-
-	public EntropyCalculator() {
-		this.entropy = 0;
-	}
+	
+	private AttributeGetter attributeGetter;
+	private double entropy;
+	
+	public EntropyCalculator() {}
 
 	/**
 	 * Calculates the entropy for the remaining instances in the data being used to build the tree
-	 * @param instances
+	 * @param instances Array list of instances.
 	 */
 	public void calculateEntropy(ArrayList<Instance> instances) {
+		
 		int republican = 0;
 		int democrat = 0;
 
 		double dataSetSize = instances.size();
-		for (int i = 0; i < instances.size(); i++) {
-			int thisClassification = instances.get(i).getClassification();
+		for (int instance = 0; instance < instances.size(); instance++) {
+			int thisClassification = instances.get(instance).getClassification();
 			if (thisClassification == 1)
 				republican++;
 			else if (thisClassification == 2)
 				democrat++;
-
 		}
 		if (republican != 0)
 			entropy += -republican / dataSetSize * (Math.log(republican / dataSetSize) / Math.log(2));
@@ -45,35 +42,43 @@ public class EntropyCalculator {
 			entropy += -democrat / dataSetSize * (Math.log(democrat / dataSetSize) / Math.log(2));
 	}
 
-	
-	public int calculateHighestGain(ArrayList<Instance> remaining, ArrayList<Attribute> attributesRemaining) {
+	/**
+	 * Method finds the attribute in the list of remaining attributes that has the highest information gain, best splitting the remaining data.
+	 * @param RemainingInstances Array list containing instances that will be used to calculate information gain.
+	 * @param AttributesRemaining Array list containing the remaining attributes that have not been used to build the decision tree yet.
+	 * @return The position in the remaining attributes array list that holds the attribute that will give the highest information gain.
+	 */
+	public int calculateHighestGain(ArrayList<Instance> remainingInstances, ArrayList<Attribute> attributesRemaining) {
 
 		ArrayList<Double> doubles = new ArrayList<Double>();
 		ArrayList<Attribute> addedAttributes = new ArrayList<Attribute>();
 
 		for (Attribute attribute : attributesRemaining) {
-			ag = new AttributeGetter(attribute);
-			int attributeNumer = ag.getAttribute();
-			//checkAndAssignValue(remaining, attribute);
-			doubles.add(calculateInformationGain(remaining, attributeNumer));
+			attributeGetter = new AttributeGetter(attribute);
+			int attributeNumer = attributeGetter.getAttribute();
+			doubles.add(calculateInformationGain(remainingInstances, attributeNumer));
 			addedAttributes.add(attribute);
 		}
 
 		double max = -99999;
 
 		int position = -1;
-		// Doesn't really work if two values are the same
 		for (int i = 0; i < doubles.size(); i++) {
 			if (doubles.get(i) > max) {
 				max = doubles.get(i);
 				position = i;
 			}
 		}
-
 		return position;
 	}
 
-	public double calculateInformationGain(ArrayList<Instance> remaining, int attribute) {
+	/**
+	 * Method uses the entropy and number of republicans and democrats in the remaining instances to calculate information gain.
+	 * @param remainingInstances Array list of remaining instances.
+	 * @param attribute The attribute on which information gain is being calculated.
+	 * @return Returns a value for information gain.
+	 */
+	public double calculateInformationGain(ArrayList<Instance> remainingInstances, int attribute) {
 		double gain = 0;
 
 		int republicanAndYes = 0;
@@ -84,18 +89,18 @@ public class EntropyCalculator {
 		int democratAndNo = 0;
 		double democratAppearances = 0;
 
-		for (int i = 0; i < remaining.size(); i++) {
-			int thisClassification = remaining.get(i).getClassification();
+		for (int instance = 0; instance < remainingInstances.size(); instance++) {
+			int thisClassification = remainingInstances.get(instance).getClassification();
 			if (thisClassification == 1) {
 				republicanAppearances++;
-				int vote = remaining.get(i).getAttributeValue(attribute);
+				int vote = remainingInstances.get(instance).getAttributeValue(attribute);
 				if (vote == 1)
 					republicanAndYes++;
 				else if (vote == 2)
 					republicanAndNo++;
 			} else if (thisClassification == 2) {
 				democratAppearances++;
-				int vote = remaining.get(i).getAttributeValue(attribute);
+				int vote = remainingInstances.get(instance).getAttributeValue(attribute);
 				if (vote == 1)
 					democratAndYes++;
 				else if (vote == 2)
@@ -118,70 +123,42 @@ public class EntropyCalculator {
 			noGain += -democratAndNo / democratAppearances
 					* (Math.log(democratAndNo / democratAppearances) / Math.log(2));
 
-		gain = entropy - (republicanAppearances / remaining.size() * yesGain
-				+ democratAppearances / remaining.size() * noGain);
+		gain = entropy - (((republicanAppearances / remainingInstances.size()) * yesGain
+				)+ ((democratAppearances / remainingInstances.size()) * noGain));
 		return gain;
 
 	}
 
 	/**
-	 * A second, more complex procedure is to assign a probability to each of
-	 * the possible values of A rather than simply assigning the most common
-	 * value to A(x). These probabilities can be estimated again based on the
-	 * observed frequencies of the various values for A among the examples at
-	 * node n. For example, given a boolean attribute A, if node n contains six
-	 * known examples with A = 1 and four with A = 0, then we would say the
-	 * probability that A(x) = 1 is 0.6, and the probability that A(x) = 0 is
-	 * 0.4. A fractional 0.6 of instance x is now distributed down the branch
-	 * for A = 1, and a fractional 0.4 of x down the other tree branch. These
-	 * fractional examples are used for the purpose of computing information
-	 * Gain and can be further subdivided at subsequent branches of the tree if
-	 * a second missing attribute value must be tested. This same fractioning of
-	 * examples can also be applied after learning, to classify new instances
-	 * whose attribute values are unknown. In this case, the classification of
-	 * the new instance is simply the most probable classification, computed by
-	 * summing the weights of the instance fragments classified in different
-	 * ways at the leaf nodes of the tree. This method for handling missing
-	 * attribute values is used in C4.5 (Quinlan 1993).
-	 * 
-	 * @param attribute
-	 **/
-
+	 * Method assigns missing attribute values.
+	 * @param instances Array list of instances that may or may not have missing attribute values.
+	 * @param attribute Attribute to be checked for missing values. 
+	 */
 	public void checkAndAssignValue(ArrayList<Instance> instances, Attribute attribute) {
 
-		// for every attribute
-
-		ag = new AttributeGetter(attribute);
-		int attributeNumer = ag.getAttribute();
+		attributeGetter = new AttributeGetter(attribute);
+		int attributeNumer = attributeGetter.getAttribute();
 
 		double missingValue = 0;
 		double numberOfYes = 0;
-		double numberOfNo = 0;
 
-		for (Instance i : instances) {
-			int value = i.getAttributeValue(attributeNumer);
+		for (Instance instance : instances) {
+			int value = instance.getAttributeValue(attributeNumer);
 			if (value == 3) {
 				missingValue++;
 			} else if (value == 1) {
 				numberOfYes++;
-			} else if (value == 2) {
-				numberOfNo++;
 			}
 		}
 
 		if (missingValue == 0)
 			return;
 
-		Random r = new Random();
-
-		// Should it be
-
+		Random random = new Random();
 		double percentageYes = numberOfYes / (instances.size() - missingValue);
-		double percentageNo = numberOfNo / (instances.size() - missingValue);
-
+		
 		for (Instance i : instances) {
-			double chanceYes = r.nextDouble();
-
+			double chanceYes = random.nextDouble();
 			if (i.getAttributeValue(attributeNumer) == 3) {
 				if (chanceYes <= percentageYes) {
 					i.setAttributeValue(attributeNumer+1, 1);
@@ -189,17 +166,22 @@ public class EntropyCalculator {
 					i.setAttributeValue(attributeNumer+1, 2);
 				}
 			}
-
 		}
-
 	}
 
+	/**
+	 * Returns the entropy.
+	 * @return A value for entropy. 
+	 */
 	public double getEntropy() {
 		return entropy;
 	}
-
+	
+	/**
+	 * Sets the entropy value.
+	 * @param entropy value entropy is to be set to.
+	 */
 	public void setEntropy(double entropy) {
-		this.entropy = entropy;
+		this.entropy =  entropy;
 	}
-
 }

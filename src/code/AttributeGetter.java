@@ -1,5 +1,4 @@
 package code;
-import java.util.ArrayList;
 
 /**
  * CS39440 Major Project: Learning From Experience 
@@ -7,29 +6,29 @@ import java.util.ArrayList;
  * Purpose: A class that can link integer numbers to attributes and return an array of integers for attribute values 	
  * 
  * @author Ben Larking
- * @version 1.6 14/03/16
+ * @version 2.0 29/04/16
  */
 
 public class AttributeGetter {
 
-	private Attribute A;
+	private Attribute attribute;
 	private int id;
 
-	public AttributeGetter(Attribute A) {
-		this.A = A;
+	public AttributeGetter(Attribute attribute) {
+		this.attribute = attribute;
 	}
 	
 	public AttributeGetter(int id) {
 		this.id = id;
-		this.A = getAttributefromValue();
+		this.attribute = getAttributefromValue();
 	}
 
 	/**
 	 * 
-	 * @return an integer value for each attribute
+	 * @return an integer value for each attribute.
 	 */
 	public int getAttribute() {
-		switch (A) {
+		switch (attribute) {
 		case handicapped_infants:
 			return 0;
 		case water_project_cost_sharing:
@@ -62,7 +61,6 @@ public class AttributeGetter {
 			return 14;
 		case export_administration_act_south_africa:
 			return 15;
-
 		default:
 			System.out.println("Undefined Attribute");
 			return 16;
@@ -71,7 +69,7 @@ public class AttributeGetter {
 
 	/**
 	 * 
-	 * @return a string representing each attribute given an integer
+	 * @return a string representing each attribute, given an integer.
 	 */
 	public String getAttributeString() {
 		switch (id) {
@@ -107,7 +105,6 @@ public class AttributeGetter {
 			return "duty_free_exports";
 		case 15:
 			return "export_administration_act_south_africa";
-
 		default:
 			return "Leaf";
 		}
@@ -151,7 +148,6 @@ public class AttributeGetter {
 			return Attribute.duty_free_exports;
 		case 15:
 			return Attribute.export_administration_act_south_africa;
-
 		default:
 			Attribute leaf = null;
 			return leaf;

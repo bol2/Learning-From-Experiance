@@ -1,14 +1,11 @@
 package code;
 
-import java.lang.reflect.Field;
-import java.util.Properties;
-
 /**
  * CS39440 Major Project: Learning From Experience Instance.java Purpose:
  * Represents a single instance from the data set with named attributes
  * 
  * @author Ben Larking
- * @version 1.6 14/03/16
+ * @version 2.0 29/04/16
  */
 
 public class Instance {
@@ -31,34 +28,7 @@ public class Instance {
 	private int duty_free_exports;
 	private int export_administration_act_south_africa;
 
-	public Instance() {
-	}
-
-	public Instance(int classification, int handicapped_infants, int water_project_cost_sharing,
-			int adoption_of_the_budget_resolution, int physician_fee_freeze, int el_salvador_aid,
-			int religious_groups_in_schools, int anti_satellite_test_ban, int aid_to_nicaraguan_contras, int mx_missile,
-			int immigration, int synfuels_corporation_cutback, int education_spending, int superfund_right_to_sue,
-			int crime, int duty_free_exports, int export_administration_act_south_africa) {
-
-		this.classification = classification;
-		this.handicapped_infants = handicapped_infants;
-		this.water_project_cost_sharing = water_project_cost_sharing;
-		this.adoption_of_the_budget_resolution = adoption_of_the_budget_resolution;
-		this.physician_fee_freeze = physician_fee_freeze;
-		this.el_salvador_aid = el_salvador_aid;
-		this.religious_groups_in_schools = religious_groups_in_schools;
-		this.anti_satellite_test_ban = anti_satellite_test_ban;
-		this.aid_to_nicaraguan_contras = aid_to_nicaraguan_contras;
-		this.mx_missile = mx_missile;
-		this.immigration = immigration;
-		this.synfuels_corporation_cutback = synfuels_corporation_cutback;
-		this.education_spending = education_spending;
-		this.superfund_right_to_sue = superfund_right_to_sue;
-		this.crime = crime;
-		this.duty_free_exports = duty_free_exports;
-		this.export_administration_act_south_africa = export_administration_act_south_africa;
-
-	}
+	public Instance(){}
 
 	public int getHandicapped_infants() {
 		return handicapped_infants;
@@ -197,128 +167,90 @@ public class Instance {
 	}
 
 	/**
-	 * Calls a method to return the value of a given attribute
-	 * @param i integer representing attribute
+	 * Returns the value of a given attribute.
+	 * 
+	 * @param attributeID
+	 *            integer representing attribute
 	 * @return integer representing if the vote is democrat, republican or ?
 	 */
-	public int getAttributeValue(int i) {
-		if (i == 0)
+	public int getAttributeValue(int attributeID) {
+		if (attributeID == 0)
 			return this.getHandicapped_infants();
-		else if (i == 1)
+		else if (attributeID == 1)
 			return this.getWater_project_cost_sharing();
-		else if (i == 2)
+		else if (attributeID == 2)
 			return this.getAdoption_of_the_budget_resolution();
-		else if (i == 3)
+		else if (attributeID == 3)
 			return this.getPhysician_fee_freeze();
-		else if (i == 4)
+		else if (attributeID == 4)
 			return this.getEl_salvador_aid();
-		else if (i == 5)
+		else if (attributeID == 5)
 			return this.getReligious_groups_in_schools();
-		else if (i == 6)
+		else if (attributeID == 6)
 			return this.getAnti_satellite_test_ban();
-		else if (i == 7)
+		else if (attributeID == 7)
 			return this.getAid_to_nicaraguan_contras();
-		else if (i == 8)
+		else if (attributeID == 8)
 			return this.getMx_missile();
-		else if (i == 9)
+		else if (attributeID == 9)
 			return this.getImmigration();
-		else if (i == 10)
+		else if (attributeID == 10)
 			return this.getSynfuels_corporation_cutback();
-		else if (i == 11)
+		else if (attributeID == 11)
 			return this.getEducation_spending();
-		else if (i == 12)
+		else if (attributeID == 12)
 			return this.getSuperfund_right_to_sue();
-		else if (i == 13)
+		else if (attributeID == 13)
 			return this.getCrime();
-		else if (i == 14)
+		else if (attributeID == 14)
 			return this.getDuty_free_exports();
-		else if (i == 15)
+		else if (attributeID == 15)
 			return this.getExport_administration_act_south_africa();
-
 		return 16;
 	}
 
 	/**
-	 * Given an integer representing an attribute this method sets the value.
-	 * @param i integer representing the attribute
-	 * @param value is the value to be assigned to an attribute
+	 * Given an integer representing an attribute this method sets the value of the attribute to the integer value passed in.
+	 * 
+	 * @param instanceID
+	 *            integer representing the attribute
+	 * @param value
+	 *            is the value to be assigned to an attribute
 	 */
-	public void setAttributeValue(int i, int value) {
-		if (i == 0)
+	public void setAttributeValue(int instanceID, int value) {
+		if (instanceID == 0)
 			this.setClassification(value);
-		else if (i == 1)
+		else if (instanceID == 1)
 			this.setHandicapped_infants(value);
-		else if (i == 2)
+		else if (instanceID == 2)
 			this.setWater_project_cost_sharing(value);
-		else if (i == 3)
+		else if (instanceID == 3)
 			this.setAdoption_of_the_budget_resolution(value);
-		else if (i == 4)
+		else if (instanceID == 4)
 			this.setPhysician_fee_freeze(value);
-		else if (i == 5)
+		else if (instanceID == 5)
 			this.setEl_salvador_aid(value);
-		else if (i == 6)
+		else if (instanceID == 6)
 			this.setReligious_groups_in_schools(value);
-		else if (i == 7)
+		else if (instanceID == 7)
 			this.setAnti_satellite_test_ban(value);
-		else if (i == 8)
+		else if (instanceID == 8)
 			this.setAid_to_nicaraguan_contras(value);
-		else if (i == 9)
+		else if (instanceID == 9)
 			this.setMx_missile(value);
-		else if (i == 10)
+		else if (instanceID == 10)
 			this.setImmigration(value);
-		else if (i == 11)
+		else if (instanceID == 11)
 			this.setSynfuels_corporation_cutback(value);
-		else if (i == 12)
+		else if (instanceID == 12)
 			this.setEducation_spending(value);
-		else if (i == 13)
+		else if (instanceID == 13)
 			this.setSuperfund_right_to_sue(value);
-		else if (i == 14)
+		else if (instanceID == 14)
 			this.setCrime(value);
-		else if (i == 15)
+		else if (instanceID == 15)
 			this.setDuty_free_exports(value);
-		else if (i == 16)
+		else if (instanceID == 16)
 			this.setExport_administration_act_south_africa(value);
 	}
-
-	/**
-	 * Returns a toString for the instance.
-	 */
-	public String toString() {
-		StringBuffer result = new StringBuffer();
-
-		Field[] fields = this.getClass().getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			if (i > 0) {
-				result.append(",");
-			}
-			try {
-
-				if (i == 0) {
-					if (fields[i].get(this).equals(1)) {
-						result.append("republican");
-					} else if (fields[i].get(this).equals(2)) {
-						result.append("democrat");
-					}
-				} else {
-					if (fields[i].get(this).equals(1)) {
-						result.append("y");
-					} else if (fields[i].get(this).equals(2)) {
-						result.append("n");
-					} else if (fields[i].get(this).equals(3)) {
-						result.append("?");
-					}
-				}
-
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return result.toString();
-
-	}
-
 }
