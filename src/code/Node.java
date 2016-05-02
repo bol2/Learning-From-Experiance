@@ -1,7 +1,6 @@
 package code;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * CS39440 Major Project: Learning From Experience Node.java Purpose: Represents
@@ -9,64 +8,56 @@ import java.util.HashMap;
  * children, possible values and its own data.
  * 
  * @author Ben Larking
- * @version 1.6 14/03/16
+ * @version 2.0 29/04/16
  */
 
 public class Node{
 
 	private ArrayList<Integer> branchValues;
-	private int attribute;
 	private ArrayList<Node> children;
-
 	private ArrayList<Instance> ownData;
+	private int attribute;
 	private String label;
-	private Node perant;
+	private Node parent;
 
 	public Node() {
 		this.branchValues = new ArrayList<Integer>();
 		this.children = new ArrayList<Node>();
 		this.ownData = new ArrayList<Instance>();
 		this.attribute = 16;
-		this.setPerant(null);
+		this.setParent(null);
 	}
 
-	public Node cloneNode(Node n, Node treeToPrune) {
-		treeToPrune.setAttribute(n.getAttribute());
-		treeToPrune.setLabel(n.getLabel());
-		for (Integer i : n.getValues()) {
-			treeToPrune.setValues(i);
+	/**
+	 * Creates a copy of a node.
+	 * @param node Node that will be copied.
+	 * @param newNode Node that will have new values assigned to it.
+	 * @return A node that has been copied. 
+	 */
+	public Node cloneNode(Node node, Node newNode) {
+		newNode.setAttribute(node.getAttribute());
+		newNode.setLabel(node.getLabel());
+		for (Integer branchID : node.getValues()) {
+			newNode.setValues(branchID);
 		}
 		ArrayList<Instance> assign = new ArrayList<Instance>();
-		for (Instance i : n.getOwnData()) {
-			assign.add(i);
+		for (Instance instance : node.getOwnData()) {
+			assign.add(instance);
 		}
-		treeToPrune.setOwnData(assign);
-		for (Node copyNode : n.getChildren()) {
-			Node newChild = new Node();
-			treeToPrune.setChildren(newChild);
-			cloneNode(copyNode, newChild);
+		newNode.setOwnData(assign);
+		for (Node copyNode : node.getChildren()) {
+			copyNode.setParent(newNode);
+			newNode.setChildren(copyNode);
 		}
-		return treeToPrune;
-	}
-
-	public Node(ArrayList<Integer> values, int attribute2, ArrayList<Node> children2, ArrayList<Instance> ownData2,
-			String label2) {
-		branchValues = values;
-		attribute = attribute2;
-		children = children2;
-		ownData = ownData2;
-		label = label2;
+		
+		newNode.setParent(node.getParent());
+		return newNode;
 	}
 
 	public ArrayList<Node> getChildren() {
 		return children;
 	}
 
-	/**
-	 * 
-	 * @param children
-	 *            a node to be added to the child node
-	 */
 	public void setChildren(Node children) {
 		this.children.add(children);
 	}
@@ -75,77 +66,36 @@ public class Node{
 		this.children.remove(children);
 	}
 
-	/**
-	 * 
-	 * @return the possible values for this node
-	 */
 	public ArrayList<Integer> getValues() {
 		return branchValues;
 	}
 
-	/**
-	 * 
-	 * @return the possible values for this node
-	 */
-	public void setValues(Integer i) {
-		branchValues.add(i);
+	public void setValues(int value) {
+		branchValues.add(value);
 	}
 
-	/**
-	 * 
-	 * @return integer representing the attribute of this node
-	 */
 	public int getAttribute() {
 		return attribute;
 	}
 
-	/**
-	 * given an integer this method sets the attribute for this node
-	 * 
-	 * @param attribute
-	 *            is integer representing attribute value
-	 */
 	public void setAttribute(int attribute) {
 		this.attribute = attribute;
 	}
 
-	/**
-	 * returns an array list of data held by this node
-	 * 
-	 * @return the array list of data held by this node
-	 */
 	public ArrayList<Instance> getOwnData() {
 		return ownData;
 	}
 
-	/**
-	 * Set the data of this node to the array list that is passed in
-	 * 
-	 * @param remaining
-	 *            the array of information passed in.
-	 */
 	public void setOwnData(ArrayList<Instance> remaining) {
 		this.ownData = remaining;
 	}
 
-	/**
-	 * Add to the nodes own data
-	 * 
-	 * @param i
-	 *            the instance being added to the nodes data
-	 */
-	public void setClassifiedData(Instance i) {
-		ownData.add(i);
+	public void setClassifiedData(Instance instance) {
+		ownData.add(instance);
 	}
 
-	/**
-	 * removes a instance from the nodes own data
-	 * 
-	 * @param i
-	 *            the instance being removed
-	 */
-	public void removeClassifyData(Instance i) {
-		ownData.remove(i);
+	public void removeClassifyData(Instance instance) {
+		ownData.remove(instance);
 	}
 
 	public String getLabel() {
@@ -156,11 +106,11 @@ public class Node{
 		this.label = label;
 	}
 
-	public Node getPerant() {
-		return perant;
+	public Node getParent() {
+		return parent;
 	}
 
-	public void setPerant(Node perant) {
-		this.perant = perant;
+	public void setParent(Node parent) {
+		this.parent = parent;
 	}
 }

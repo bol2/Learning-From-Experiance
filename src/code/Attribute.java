@@ -6,7 +6,7 @@ package code;
  * Purpose: An Enum class to represent the different attributes inside the contact lens data set.			
  * 
  * @author Ben Larking
- * @version 1.4 22/02/16
+ * @version 2.0 29/04/16
  */
 
 public enum Attribute {
